@@ -1,0 +1,55 @@
+<h1>Mes conversations</h1>
+
+<section aria-labelledby="titre-nouvelle">
+  <h2 id="titre-nouvelle">Ouvrir une demande</h2>
+  <form (ngSubmit)="ouvrir()">
+    <div class="champ">
+      <label for="sujet">Objet de votre demande</label>
+      <input
+        id="sujet"
+        name="sujet"
+        type="text"
+        required
+        maxlength="160"
+        [(ngModel)]="sujet"
+        aria-describedby="aide-sujet"
+      />
+      <p id="aide-sujet" class="discret">160 caractères au maximum.</p>
+    </div>
+    <button type="submit" [disabled]="!sujet.trim()">Ouvrir la conversation</button>
+  </form>
+  @if (erreur(); as message) {
+    <p class="erreur" role="alert">{{ message }}</p>
+  }
+</section>
+
+<section aria-labelledby="titre-liste">
+  <h2 id="titre-liste">Mes échanges</h2>
+  @if (conversations().length === 0) {
+    <p>Aucune conversation pour le moment.</p>
+  } @else {
+    <ul class="liste-simple">
+      @for (conversation of conversations(); track conversation.id) {
+        <li>
+          <a [routerLink]="['/conversations', conversation.id]">{{ conversation.subject }}</a>
+          <p class="discret">
+            Ouverte le {{ conversation.openedAt | date: 'medium' }} —
+            {{ libelleStatut(conversation) }}
+            <!-- Le compteur de non-lus vient du serveur : il est calcule a partir du marqueur de
+                 lecture, jamais devine cote navigateur. -->
+            @if (conversation.unreadCount > 0) {
+              —
+              <strong
+                >{{ conversation.unreadCount }}
+                {{ conversation.unreadCount > 1 ? 'messages non lus' : 'message non lu' }}</strong
+              >
+            }
+          </p>
+          @if (conversation.lastMessagePreview) {
+            <p class="discret">Dernier message : {{ conversation.lastMessagePreview }}</p>
+          }
+        </li>
+      }
+    </ul>
+  }
+</section>

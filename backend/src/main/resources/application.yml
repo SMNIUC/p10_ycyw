@@ -1,0 +1,70 @@
+spring:
+  application:
+    name: ycyw-poc-assistance
+
+  datasource:
+    url: ${POC_DB_URL:jdbc:postgresql://localhost:5432/ycyw}
+    username: ${POC_DB_USERNAME:ycyw}
+    password: ${POC_DB_PASSWORD:}
+
+  jpa:
+    # Desactive : la vue ne doit pas declencher de requete. Toute donnee affichee est chargee
+    # explicitement par le cas d'usage, ce qui rend le cout d'une page lisible et previsible (ENF-23).
+    open-in-view: false
+    hibernate:
+      # Le schema est produit par les migrations versionnees, jamais par le framework de persistance.
+      # "validate" fait echouer le demarrage si le code et la base ont diverge.
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+  jackson:
+    default-property-inclusion: non_null
+
+server:
+  port: ${POC_PORT:8080}
+  shutdown: graceful
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+poc:
+  # Etiquette affichee par l'application cliente pour montrer quelle instance a servi la requete.
+  instance-label: ${POC_INSTANCE_LABEL:instance-locale}
+
+  security:
+    # Aucune valeur par defaut : l'application refuse de demarrer sans secret fourni par
+    # l'environnement (reponse au constat F-13 de l'audit).
+    jwt-secret: ${POC_JWT_SECRET}
+    token-ttl: ${POC_TOKEN_TTL:PT30M}
+    cookie-name: ${POC_COOKIE_NAME:ycyw_session}
+    cookie-path: ${POC_COOKIE_PATH:/}
+    # Toujours true des que le service est servi en HTTPS — donc toujours en production.
+    cookie-secure: ${POC_COOKIE_SECURE:false}
+
+  broker:
+    # true = diffusion par le broker externe, seul mode compatible avec plusieurs instances.
+    relay-enabled: ${POC_BROKER_RELAY_ENABLED:false}
+    host: ${POC_BROKER_HOST:localhost}
+    port: ${POC_BROKER_PORT:61613}
+    login: ${POC_BROKER_LOGIN:guest}
+    passcode: ${POC_BROKER_PASSCODE:guest}
+    virtual-host: ${POC_BROKER_VIRTUAL_HOST:/}
+    allowed-origins: ${POC_ALLOWED_ORIGINS:http://localhost:4200}
+
+logging:
+  level:
+    com.ycyw.poc: ${POC_LOG_LEVEL:INFO}

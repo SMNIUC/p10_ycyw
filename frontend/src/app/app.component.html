@@ -1,0 +1,36 @@
+<a class="lien-evitement" href="#contenu">Aller au contenu</a>
+
+<header class="bandeau">
+  <p><strong>Assistance Your Car Your Way</strong> — preuve de concept</p>
+
+  @if (session.session(); as courante) {
+    @if (courante.authenticated) {
+      <p>
+        <span>{{ courante.displayName }}</span>
+        <span class="discret"> ({{ courante.role === 'AGENT' ? 'agent' : 'client' }})</span>
+        <span class="discret"> — servi par {{ courante.instance }}</span>
+      </p>
+    }
+  }
+
+  <!-- Region d'etat : l'annonce se fait sans deplacer le focus, qui peut etre dans la zone de
+       saisie d'un message. -->
+  <p class="etat-connexion" role="status">
+    {{ libelleConnexion() }}
+  </p>
+
+  <nav aria-label="Navigation principale">
+    @if (session.session()?.authenticated) {
+      @if (session.estAgent()) {
+        <a routerLink="/file-attente">File d’attente</a>
+      } @else {
+        <a routerLink="/mes-conversations">Mes conversations</a>
+      }
+      <button type="button" class="secondaire" (click)="seDeconnecter()">Se déconnecter</button>
+    }
+  </nav>
+</header>
+
+<main id="contenu">
+  <router-outlet />
+</main>

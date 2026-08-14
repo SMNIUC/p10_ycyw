@@ -1,0 +1,58 @@
+<h1>File d’attente</h1>
+
+@if (erreur(); as message) {
+  <p class="erreur" role="alert">{{ message }}</p>
+}
+
+<section aria-labelledby="titre-file">
+  <h2 id="titre-file">Demandes en attente</h2>
+  <!-- Region de journal : l'arrivee d'une demande est annoncee sans deplacer le focus, qui peut
+       se trouver ailleurs dans la page. -->
+  <div role="log" aria-live="polite" aria-relevant="additions text">
+    @if (file().length === 0) {
+      <p>Aucune demande en attente.</p>
+    } @else {
+      <ul class="liste-simple">
+        @for (demande of file(); track demande.id) {
+          <li>
+            <p>
+              <strong>{{ demande.subject }}</strong>
+            </p>
+            <p class="discret">
+              Reçue le {{ demande.openedAt | date: 'medium' }} — en attente depuis
+              {{ attente(demande) }}
+            </p>
+            <!-- Le libelle du bouton rappelle l'objet de la demande : hors contexte visuel,
+                 « Prendre en charge » seul ne dirait pas laquelle. -->
+            <button type="button" (click)="prendreEnCharge(demande)">
+              Prendre en charge : {{ demande.subject }}
+            </button>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+</section>
+
+<section aria-labelledby="titre-encours">
+  <h2 id="titre-encours">Mes conversations</h2>
+  @if (mesConversations().length === 0) {
+    <p>Aucune conversation prise en charge.</p>
+  } @else {
+    <ul class="liste-simple">
+      @for (conversation of mesConversations(); track conversation.id) {
+        <li>
+          <a [routerLink]="['/conversations', conversation.id]">{{ conversation.subject }}</a>
+          @if (conversation.unreadCount > 0) {
+            <p class="discret">
+              <strong
+                >{{ conversation.unreadCount }}
+                {{ conversation.unreadCount > 1 ? 'messages non lus' : 'message non lu' }}</strong
+              >
+            </p>
+          }
+        </li>
+      }
+    </ul>
+  }
+</section>

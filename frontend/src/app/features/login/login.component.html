@@ -1,0 +1,64 @@
+<h1>Connexion</h1>
+
+<form (ngSubmit)="seConnecter()">
+  <fieldset class="champ">
+    <legend>Instance de l’application</legend>
+    <p class="discret" id="aide-instance">
+      Deux instances de la même application partagent la base de données et le broker. Ouvrez la
+      session client sur l’une et la session agent sur l’autre pour vérifier la diffusion entre
+      instances.
+    </p>
+    @for (instance of instances; track instance.id) {
+      <p>
+        <input
+          type="radio"
+          [id]="'instance-' + instance.id"
+          name="instance"
+          [value]="instance"
+          [(ngModel)]="instanceChoisie"
+          aria-describedby="aide-instance"
+        />
+        <label [for]="'instance-' + instance.id" class="libelle-inline">
+          {{ instance.libelle }}
+        </label>
+      </p>
+    }
+  </fieldset>
+
+  <div class="champ">
+    <label for="email">Adresse électronique</label>
+    <input
+      id="email"
+      name="email"
+      type="email"
+      autocomplete="username"
+      required
+      [(ngModel)]="email"
+      [attr.aria-invalid]="erreur() ? 'true' : null"
+    />
+    <p class="discret">
+      Comptes de démonstration : alice.client&#64;example.test, bruno.client&#64;example.test,
+      sam.agent&#64;example.test. Le mot de passe figure dans le README.
+    </p>
+  </div>
+
+  <div class="champ">
+    <label for="motDePasse">Mot de passe</label>
+    <input
+      id="motDePasse"
+      name="motDePasse"
+      type="password"
+      autocomplete="current-password"
+      required
+      [(ngModel)]="motDePasse"
+      [attr.aria-invalid]="erreur() ? 'true' : null"
+    />
+  </div>
+
+  <!-- Region d'alerte : l'echec de connexion est annonce immediatement au lecteur d'ecran. -->
+  @if (erreur(); as message) {
+    <p class="erreur" role="alert">{{ message }}</p>
+  }
+
+  <button type="submit" [disabled]="enCours()">Se connecter</button>
+</form>

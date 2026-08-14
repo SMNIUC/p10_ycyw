@@ -1,0 +1,113 @@
+# ---------------------------------------------------------------------------------------------
+# Environnement de developpement complet, demarre par une seule commande : docker compose up
+#
+# La composition n'est pas une commodite de demonstration : elle EST la demonstration.
+# Deux instances de la meme application partagent une base et un broker. Le client se connecte a
+# l'une, l'agent a l'autre, et ils dialoguent — ce qui serait impossible si la diffusion reposait
+# sur le broker en memoire integre au framework (DA-11).
+#
+# Correspondance avec la cible de production :
+#   web      -> reseau de diffusion de contenu + repartiteur de charge
+#   app-1/2  -> instances du service applicatif, mises a l'echelle horizontalement (ENF-19)
+#   postgres -> base de donnees geree, repliquee et sauvegardee (§ 12.2)
+#   rabbitmq -> broker compatible AMQP gere
+# ---------------------------------------------------------------------------------------------
+
+name: ycyw-poc
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-ycyw}
+      POSTGRES_USER: ${POSTGRES_USER:-ycyw}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?definir POSTGRES_PASSWORD dans .env}
+    ports:
+      # 5433 par defaut : un PostgreSQL installe sur le poste occupe deja 5432.
+      # Surchargeable par POSTGRES_PORT dans .env.
+      - "${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ycyw} -d ${POSTGRES_DB:-ycyw}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  rabbitmq:
+    build: ./infra/rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-ycyw}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:?definir RABBITMQ_PASSWORD dans .env}
+    ports:
+      - "5672:5672"   # AMQP
+      - "15672:15672" # console d'administration
+      - "61613:61613" # relais STOMP, utilise par l'application
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "check_running"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  app-1: &application
+    build: ./backend
+    # Meme image pour les deux instances : c'est le meme deployable, seule la configuration
+    # differe. Le second build est entierement servi par le cache.
+    image: ycyw-poc-app:local
+    environment:
+      SPRING_PROFILES_ACTIVE: demo
+      POC_DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-ycyw}
+      POC_DB_USERNAME: ${POSTGRES_USER:-ycyw}
+      POC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      POC_JWT_SECRET: ${POC_JWT_SECRET:?definir POC_JWT_SECRET dans .env}
+      POC_DEMO_PASSWORD: ${POC_DEMO_PASSWORD:?definir POC_DEMO_PASSWORD dans .env}
+      # Diffusion par le broker externe : c'est le point que la preuve de concept demontre.
+      POC_BROKER_RELAY_ENABLED: "true"
+      POC_BROKER_HOST: rabbitmq
+      POC_BROKER_PORT: "61613"
+      POC_BROKER_LOGIN: ${RABBITMQ_USER:-ycyw}
+      POC_BROKER_PASSCODE: ${RABBITMQ_PASSWORD}
+      POC_ALLOWED_ORIGINS: http://localhost:4200
+      POC_INSTANCE_LABEL: instance-1
+      POC_COOKIE_PATH: /
+    ports:
+      - "8081:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  app-2:
+    <<: *application
+    environment:
+      SPRING_PROFILES_ACTIVE: demo
+      POC_DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-ycyw}
+      POC_DB_USERNAME: ${POSTGRES_USER:-ycyw}
+      POC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      POC_JWT_SECRET: ${POC_JWT_SECRET}
+      POC_DEMO_PASSWORD: ${POC_DEMO_PASSWORD}
+      POC_BROKER_RELAY_ENABLED: "true"
+      POC_BROKER_HOST: rabbitmq
+      POC_BROKER_PORT: "61613"
+      POC_BROKER_LOGIN: ${RABBITMQ_USER:-ycyw}
+      POC_BROKER_PASSCODE: ${RABBITMQ_PASSWORD}
+      POC_ALLOWED_ORIGINS: http://localhost:4200
+      POC_INSTANCE_LABEL: instance-2
+      # Chemin de cookie distinct : permet deux sessions simultanees dans le meme navigateur.
+      POC_COOKIE_PATH: /instance-2
+    ports:
+      - "8082:8080"
+
+  web:
+    build: ./frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      app-1:
+        condition: service_healthy
+      app-2:
+        condition: service_healthy
+
+volumes:
+  postgres-data:

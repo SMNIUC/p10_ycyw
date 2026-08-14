@@ -1,0 +1,201 @@
+/*
+ * Feuille de style unique et volontairement courte.
+ *
+ * Trois principes s'y appliquent :
+ *  - accessibilite : contrastes superieurs au seuil AA, focus toujours visible, aucune information
+ *    portee par la seule couleur (les etats sont ecrits en toutes lettres) ;
+ *  - ecoconception : aucune police telechargee, aucune image, aucune bibliotheque de style ;
+ *  - sobriete : l'interface ne doit pas devenir le sujet de la demonstration.
+ */
+
+:root {
+  --fond: #ffffff;
+  --texte: #1a1a1a;
+  --texte-discret: #4a4a4a;
+  --bordure: #767676;
+  --accent: #0b4f6c;
+  --accent-texte: #ffffff;
+  --alerte: #8a1c1c;
+  --surface: #f2f4f5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--fond);
+  color: var(--texte);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+main {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+h1 {
+  font-size: 1.5rem;
+}
+
+h2 {
+  font-size: 1.2rem;
+}
+
+a {
+  color: var(--accent);
+}
+
+/* Le focus doit rester visible en permanence : c'est la seule indication de position pour une
+   navigation au clavier. */
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.lien-evitement {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: var(--accent);
+  color: var(--accent-texte);
+  padding: 0.5rem 1rem;
+}
+
+.lien-evitement:focus {
+  left: 0;
+  z-index: 10;
+}
+
+button {
+  font: inherit;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  background: var(--accent);
+  color: var(--accent-texte);
+  cursor: pointer;
+}
+
+button.secondaire {
+  background: var(--fond);
+  color: var(--accent);
+}
+
+button[disabled] {
+  opacity: 1;
+  background: var(--surface);
+  color: var(--texte-discret);
+  border-color: var(--bordure);
+  cursor: not-allowed;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+input,
+select,
+textarea {
+  font: inherit;
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--bordure);
+  border-radius: 4px;
+  background: var(--fond);
+  color: var(--texte);
+}
+
+.champ {
+  margin-bottom: 1rem;
+}
+
+/* Libellé placé à la suite de sa case ou de son bouton radio, et non au-dessus. */
+.libelle-inline {
+  display: inline;
+}
+
+.bandeau {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--bordure);
+}
+
+.etat-connexion {
+  font-weight: 600;
+}
+
+.erreur {
+  color: var(--alerte);
+  font-weight: 600;
+}
+
+.conversation {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--bordure);
+  border-radius: 4px;
+  min-height: 16rem;
+  max-height: 26rem;
+  overflow-y: auto;
+}
+
+.conversation li {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--surface);
+}
+
+.conversation li:last-child {
+  border-bottom: none;
+}
+
+.message-entete {
+  font-size: 0.875rem;
+  color: var(--texte-discret);
+}
+
+/* L'auteur est distingue par une bordure ET par un libelle textuel : la couleur seule ne porte
+   jamais l'information (ENF-03). */
+.message-agent {
+  border-left: 4px solid var(--accent);
+}
+
+.message-client {
+  border-left: 4px solid var(--bordure);
+}
+
+.liste-simple {
+  list-style: none;
+  padding: 0;
+}
+
+.liste-simple li {
+  padding: 0.75rem;
+  border: 1px solid var(--bordure);
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.discret {
+  color: var(--texte-discret);
+  font-size: 0.875rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "/api": {
+    "target": "http://localhost:8081",
+    "secure": false
+  },
+  "/ws": {
+    "target": "http://localhost:8081",
+    "secure": false,
+    "ws": true
+  },
+  "/instance-2/api": {
+    "target": "http://localhost:8082",
+    "secure": false,
+    "pathRewrite": { "^/instance-2": "" }
+  },
+  "/instance-2/ws": {
+    "target": "http://localhost:8082",
+    "secure": false,
+    "ws": true,
+    "pathRewrite": { "^/instance-2": "" }
+  }
+}

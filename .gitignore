@@ -1,0 +1,22 @@
+# Secrets : jamais versionnes. Le modele est `.env.example`.
+.env
+
+# Java
+backend/target/
+
+# Node / Angular
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/out-tsc/
+
+# Outils
+.idea/
+*.iml
+.DS_Store
+
+# Contexte de travail local et sources de la mission fournies par OpenClassrooms :
+# documents de tiers, sans raison d'etre publies dans ce depot.
+.claude/
+docs/
+misc/

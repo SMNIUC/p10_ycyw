@@ -1,0 +1,27 @@
+spring:
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+
+poc:
+  instance-label: test
+  security:
+    # Secret de test, sans valeur : il ne protege rien et n'existe que dans les sources de test.
+    jwt-secret: secret-de-test-uniquement-32-octets-minimum
+    token-ttl: PT30M
+    cookie-name: ycyw_session
+    cookie-path: /
+    cookie-secure: false
+  broker:
+    # Broker en memoire : les tests d'integration verifient la persistance et les regles, pas la
+    # diffusion entre instances — celle-ci se demontre avec docker compose.
+    relay-enabled: false
+  demo:
+    password: motdepasse-de-test
+
+logging:
+  level:
+    com.ycyw.poc: INFO
