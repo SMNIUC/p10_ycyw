@@ -51,7 +51,7 @@ class ConversationLifecycleServiceTest {
     }
 
     @Test
-    @DisplayName("l'ouverture met la demande en attente et l'annonce a la file des agents")
+    @DisplayName("l'ouverture met la demande en attente et l'annonce à la file des agents")
     void ouverture() {
         Conversation conversation = service.open(ALICE, "Modifier ma location");
 
@@ -61,7 +61,7 @@ class ConversationLifecycleServiceTest {
     }
 
     @Test
-    @DisplayName("la file d'attente est ordonnee par arrivee et porte le temps d'attente (US-26)")
+    @DisplayName("la file d'attente est ordonnée par arrivée et porte le temps d'attente (US-26)")
     void fileDAttente() {
         service.open(ALICE, "Premiere demande");
         time.advance(Duration.ofMinutes(3));
@@ -77,7 +77,7 @@ class ConversationLifecycleServiceTest {
     }
 
     @Test
-    @DisplayName("la prise en charge retire la demande de la file et est diffusee")
+    @DisplayName("la prise en charge retire la demande de la file et est diffusée")
     void priseEnCharge() {
         Conversation conversation = service.open(ALICE, "Modifier ma location");
 
@@ -88,7 +88,7 @@ class ConversationLifecycleServiceTest {
     }
 
     @Test
-    @DisplayName("un second agent est refuse, et rien n'est diffuse")
+    @DisplayName("un second agent est refusé, et rien n'est diffusé")
     void priseEnChargeConcurrente() {
         Conversation conversation = service.open(ALICE, "Modifier ma location");
         service.takeOver(conversation.id(), SAM);
@@ -100,7 +100,7 @@ class ConversationLifecycleServiceTest {
     }
 
     @Test
-    @DisplayName("la cloture est diffusee pour que le client en soit informe")
+    @DisplayName("la clôture est diffusée pour que le client en soit informé")
     void cloture() {
         Conversation conversation = service.open(ALICE, "Modifier ma location");
         service.takeOver(conversation.id(), SAM);

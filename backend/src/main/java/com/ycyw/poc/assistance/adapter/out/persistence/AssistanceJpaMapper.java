@@ -13,10 +13,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Traduction entre le modele du domaine et le modele de persistance.
+ * Traduction entre le modèle du domaine et le modèle de persistance.
  *
- * <p>Ce mappage manuel est le prix de l'independance du domaine. Il est assume : c'est le seul
- * endroit ou les deux representations se rencontrent, et il tient dans un fichier.
+ * <p>Ce mappage manuel est le prix de l'indépendance du domaine. Il est assumé : c'est le seul
+ * endroit où les deux représentations se rencontrent, et il tient dans un fichier.
  */
 final class AssistanceJpaMapper {
 
@@ -56,8 +56,8 @@ final class AssistanceJpaMapper {
     }
 
     /**
-     * Reporte l'etat de l'agregat sur l'entite existante — plutot que de la recreer — afin de
-     * conserver le numero de version du verrou optimiste.
+     * Reporte l'état de l'agrégat sur l'entité existante — plutôt que de la recréer — afin de
+     * conserver le numéro de version du verrou optimiste.
      */
     static void apply(Conversation conversation, ConversationEntity entity) {
         entity.setId(conversation.id().value());

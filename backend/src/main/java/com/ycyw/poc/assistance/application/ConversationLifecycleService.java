@@ -15,13 +15,13 @@ import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Cas d'usage du cycle de vie d'une conversation : ouverture (US-23), prise en charge et cloture
+ * Cas d'usage du cycle de vie d'une conversation : ouverture (US-23), prise en charge et clôture
  * (US-26).
  *
- * <p>Le service <b>orchestre</b> : il charge l'agregat, appelle une de ses methodes, persiste, puis
- * diffuse. Il ne decide d'aucune regle metier — celles-ci sont dans Conversation, et une regle
- * d'architecture verifiee au build interdit a un service de modifier l'etat d'un agregat autrement
- * qu'en appelant une de ses methodes.
+ * <p>Le service <b>orchestre</b> : il charge l'agrégat, appelle une de ses méthodes, persiste, puis
+ * diffuse. Il ne décide d'aucune règle métier — celles-ci sont dans Conversation, et une règle
+ * d'architecture vérifiée au build interdit à un service de modifier l'état d'un agrégat autrement
+ * qu'en appelant une de ses méthodes.
  */
 @RequiredArgsConstructor
 public class ConversationLifecycleService {
@@ -44,7 +44,7 @@ public class ConversationLifecycleService {
     /**
      * US-26 : un agent prend la demande en charge.
      *
-     * <p>Le refus du second agent est porte par l'agregat, pas par une verification prealable du
+     * <p>Le refus du second agent est porté par l'agrégat, pas par une vérification préalable du
      * service : entre un « est-elle encore libre ? » et l'affectation, une autre instance peut
      * l'avoir prise.
      */
@@ -57,7 +57,7 @@ public class ConversationLifecycleService {
         return conversation;
     }
 
-    /** US-26 : la cloture est diffusee pour que le client en soit informe. */
+    /** US-26 : la clôture est diffusée pour que le client en soit informé. */
     public Conversation close(ConversationId id, ParticipantId by) {
         Conversation conversation = load(id);
         Instant now = time.now();

@@ -10,21 +10,21 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 /**
- * Canal temps reel : WebSocket comme transport, STOMP comme protocole (DA-11).
+ * Canal temps réel : WebSocket comme transport, STOMP comme protocole (DA-11).
  *
- * <p><b>Le basculement de broker est la decision que cette classe rend visible.</b>
+ * <p><b>Le basculement de broker est la décision que cette classe rend visible.</b>
  *
  * <ul>
- *   <li>{@code relay-enabled: true} — la diffusion est deleguee a un <b>broker externe</b>. Une
- *       trame publiee par l'instance 1 revient a toutes les instances abonnees, y compris
- *       l'instance 3 ou l'agent est connecte. C'est la configuration de reference.
- *   <li>{@code relay-enabled: false} — broker <b>en memoire d'instance</b>. Suffisant pour un test
- *       ou un demarrage sans dependance, et <b>inutilisable des la seconde instance</b> : chaque
- *       instance ne diffuserait qu'a ses propres abonnes, et US-24 echouerait sans erreur visible.
+ *   <li>{@code relay-enabled: true} — la diffusion est déléguée à un <b>broker externe</b>. Une
+ *       trame publiée par l'instance 1 revient à toutes les instances abonnées, y compris
+ *       l'instance 3 où l'agent est connecté. C'est la configuration de référence.
+ *   <li>{@code relay-enabled: false} — broker <b>en mémoire d'instance</b>. Suffisant pour un test
+ *       ou un démarrage sans dépendance, et <b>inutilisable dès la seconde instance</b> : chaque
+ *       instance ne diffuserait qu'à ses propres abonnés, et US-24 échouerait sans erreur visible.
  * </ul>
  *
  * <p>Aucune ligne du domaine ni des adaptateurs ne change entre les deux modes : c'est la
- * definition meme d'un port (DA-06).
+ * définition même d'un port (DA-06).
  */
 @Configuration
 @EnableWebSocketMessageBroker
@@ -41,9 +41,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        // L'authentification de la poignee de main est portee par la chaine de filtres de securite :
-        // le cookie de session accompagne la requete de bascule de protocole, et le principal ainsi
-        // etabli est attache a la session WebSocket.
+        // L'authentification de la poignée de main est portée par la chaîne de filtres de sécurité :
+        // le cookie de session accompagne la requête de bascule de protocole, et le principal ainsi
+        // établi est attaché à la session WebSocket.
         registry.addEndpoint("/ws").setAllowedOriginPatterns(properties.allowedOrigins());
     }
 
@@ -51,15 +51,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         if (properties.relayEnabled()) {
             log.info(
-                    "Diffusion temps reel : relais STOMP vers le broker externe {}:{}",
+                    "Diffusion temps réel : relais STOMP vers le broker externe {}:{}",
                     properties.host(),
                     properties.port());
             registry.enableStompBrokerRelay("/topic", "/queue")
                     .setRelayHost(properties.host())
                     .setRelayPort(properties.port())
-                    // L'hote virtuel est impose par l'application. Sans cette ligne, celui annonce
+                    // L'hôte virtuel est imposé par l'application. Sans cette ligne, celui annoncé
                     // par le client serait transmis au broker, qui refuserait la connexion — ou
-                    // ouvrirait un espace que le client aurait choisi lui-meme.
+                    // ouvrirait un espace que le client aurait choisi lui-même.
                     .setVirtualHost(properties.virtualHost())
                     .setClientLogin(properties.login())
                     .setClientPasscode(properties.passcode())
@@ -67,7 +67,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                     .setSystemPasscode(properties.passcode());
         } else {
             log.warn(
-                    "Diffusion temps reel : broker en memoire d'instance. "
+                    "Diffusion temps réel : broker en mémoire d'instance. "
                             + "Mode de test uniquement — aucune diffusion entre instances.");
             registry.enableSimpleBroker("/topic", "/queue");
         }

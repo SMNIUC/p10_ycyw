@@ -8,12 +8,12 @@ spring:
     password: ${POC_DB_PASSWORD:}
 
   jpa:
-    # Desactive : la vue ne doit pas declencher de requete. Toute donnee affichee est chargee
-    # explicitement par le cas d'usage, ce qui rend le cout d'une page lisible et previsible (ENF-23).
+    # Désactivé : la vue ne doit pas déclencher de requête. Toute donnée affichée est chargée
+    # explicitement par le cas d'usage, ce qui rend le coût d'une page lisible et prévisible (ENF-23).
     open-in-view: false
     hibernate:
-      # Le schema est produit par les migrations versionnees, jamais par le framework de persistance.
-      # "validate" fait echouer le demarrage si le code et la base ont diverge.
+      # Le schéma est produit par les migrations versionnées, jamais par le framework de persistance.
+      # "validate" fait échouer le démarrage si le code et la base ont diverge.
       ddl-auto: validate
     properties:
       hibernate:
@@ -42,17 +42,17 @@ management:
         enabled: true
 
 poc:
-  # Etiquette affichee par l'application cliente pour montrer quelle instance a servi la requete.
+  # Étiquette affichée par l'application cliente pour montrer quelle instance a servi la requête.
   instance-label: ${POC_INSTANCE_LABEL:instance-locale}
 
   security:
-    # Aucune valeur par defaut : l'application refuse de demarrer sans secret fourni par
-    # l'environnement (reponse au constat F-13 de l'audit).
+    # Aucune valeur par défaut : l'application refuse de démarrer sans secret fourni par
+    # l'environnement (réponse au constat C-13 de l'audit).
     jwt-secret: ${POC_JWT_SECRET}
     token-ttl: ${POC_TOKEN_TTL:PT30M}
     cookie-name: ${POC_COOKIE_NAME:ycyw_session}
     cookie-path: ${POC_COOKIE_PATH:/}
-    # Toujours true des que le service est servi en HTTPS — donc toujours en production.
+    # Toujours true dès que le service est servi en HTTPS — donc toujours en production.
     cookie-secure: ${POC_COOKIE_SECURE:false}
 
   broker:

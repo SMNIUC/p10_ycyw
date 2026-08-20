@@ -7,9 +7,9 @@ import { SessionService } from './core/session.service';
 /**
  * Cadre de l'application.
  *
- * <p>Il porte trois elements d'accessibilite systematiques : un lien d'evitement vers le contenu,
- * une hierarchie de titres unique, et l'etat de connexion annonce en <b>region d'etat</b> — donc
- * sans deplacer le focus de l'utilisateur, qui peut etre en train de saisir un message.
+ * <p>Il porte trois éléments d'accessibilité systématiques : un lien d'évitement vers le contenu,
+ * une hiérarchie de titres unique, et l'état de connexion annoncé en <b>région d'état</b> — donc
+ * sans déplacer le focus de l'utilisateur, qui peut être en train de saisir un message.
  */
 @Component({
   selector: 'app-root',

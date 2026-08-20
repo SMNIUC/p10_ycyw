@@ -16,21 +16,21 @@ import {
 } from '../../core/models';
 
 /**
- * Le composant de messagerie — le plus exigeant du point de vue de l'accessibilite, et le canal
+ * Le composant de messagerie — le plus exigeant du point de vue de l'accessibilité, et le canal
  * d'assistance principal des personnes sourdes ou malentendantes.
  *
- * <p>Quatre choix repondent point par point aux criteres d'US-24 :
+ * <p>Quatre choix répondent point par point aux critères d'US-24 :
  *
  * <ol>
- *   <li>la conversation est une <b>region de journal</b> en annonce non intrusive : un message qui
- *       arrive est lu par le lecteur d'ecran <b>sans que le focus soit deplace</b>. Deplacer le
+ *   <li>la conversation est une <b>région de journal</b> en annonce non intrusive : un message qui
+ *       arrive est lu par le lecteur d'écran <b>sans que le focus soit déplacé</b>. Déplacer le
  *       focus interromprait la saisie en cours — c'est l'erreur classique de ces composants ;
- *   <li>l'etat de chaque message — envoye, remis, lu — est <b>ecrit en toutes lettres</b>, jamais
- *       porte par une icone ou une couleur seule ;
- *   <li>tout est atteignable au clavier : saisie, envoi par la touche Entree, parcours de
+ *   <li>l'état de chaque message — envoyé, remis, lu — est <b>écrit en toutes lettres</b>, jamais
+ *       porté par une icône ou une couleur seule ;
+ *   <li>tout est atteignable au clavier : saisie, envoi par la touche Entrée, parcours de
  *       l'historique par tabulation ;
- *   <li>a chaque reconnexion, l'historique <b>persiste</b> est recharge : la conversation reprend
- *       sans perte, meme si des messages ont ete emis pendant la coupure.
+ *   <li>à chaque reconnexion, l'historique <b>persisté</b> est rechargé : la conversation reprend
+ *       sans perte, même si des messages ont été émis pendant la coupure.
  * </ol>
  */
 @Component({
@@ -61,8 +61,8 @@ export class ConversationComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((evenement) => this.appliquer(evenement));
 
-    // A chaque passage a l'etat connecte — premiere connexion comme reconnexion —, l'historique
-    // persiste est recharge. C'est ce qui rend vrai « la conversation reprend sans perte ».
+    // A chaque passage à l'état connecté — première connexion comme reconnexion —, l'historique
+    // persisté est rechargé. C'est ce qui rend vrai « la conversation reprend sans perte ».
     effect(() => {
       if (this.chat.etat() === 'connecte') {
         this.chargerHistorique();
@@ -119,7 +119,7 @@ export class ConversationComponent {
     this.brouillon = '';
   }
 
-  /** Entree envoie, Maj + Entree va a la ligne : la saisie reste entierement au clavier. */
+  /** Entrée envoie, Maj + Entrée va à la ligne : la saisie reste entièrement au clavier. */
   protected envoyerAuClavier(evenement: Event): void {
     const clavier = evenement as KeyboardEvent;
     if (clavier.shiftKey) {
@@ -164,7 +164,7 @@ export class ConversationComponent {
         }
         this.messages.update((liste) => [...liste, message]);
         if (!this.estDeMoi(message)) {
-          // La conversation est ouverte a l'ecran : le message est recu, puis lu.
+          // La conversation est ouverte à l'écran : le message est reçu, puis lu.
           this.chat.accuserReception(this.conversationId, message.id);
           this.chat.marquerLu(this.conversationId);
         }
@@ -188,9 +188,9 @@ export class ConversationComponent {
   }
 
   /**
-   * L'etat d'un message ne redescend jamais : un accuse de reception arrive apres un accuse de
-   * lecture — l'ordre reseau ne garantit rien — ne doit pas faire regresser l'affichage. La regle
-   * est la meme cote serveur, dans le domaine.
+   * L'état d'un message ne redescend jamais : un accusé de réception arrive après un accuse de
+   * lecture — l'ordre réseau ne garantit rien — ne doit pas faire regresser l'affichage. La règle
+   * est la même côté serveur, dans le domaine.
    */
   private majEtats(identifiants: string[], etat: 'DELIVERED' | 'READ'): void {
     if (identifiants.length === 0) {

@@ -1,4 +1,4 @@
-/** Types echanges avec le serveur. Ils reprennent tels quels les termes du domaine. */
+/** Types échanges avec le serveur. Ils reprennent tels quels les termes du domaine. */
 
 export type RoleUtilisateur = 'CUSTOMER' | 'AGENT';
 export type EtatMessage = 'SENT' | 'DELIVERED' | 'READ';
@@ -9,7 +9,7 @@ export interface Session {
   userId: string | null;
   displayName: string | null;
   role: RoleUtilisateur | null;
-  /** Instance ayant servi la requete — sert uniquement a rendre la demonstration lisible. */
+  /** Instance ayant servi la requête — sert uniquement à rendre la démonstration lisible. */
   instance: string;
 }
 
@@ -48,7 +48,7 @@ export interface DemandeEnAttente {
   waitingSeconds: number;
 }
 
-/** Trame diffusee sur le canal temps reel. Le champ `type` porte la discrimination. */
+/** Trame diffusée sur le canal temps réel. Le champ `type` porte la discrimination. */
 export interface EvenementTchat {
   type:
     | 'MESSAGE_POSTED'
@@ -68,7 +68,7 @@ export interface EvenementTchat {
   subject?: string;
 }
 
-/** Libelles textuels des etats : jamais une icone seule (ENF-03, US-24). */
+/** Libellés textuels des états : jamais une icône seule (ENF-03, US-24). */
 export const LIBELLE_ETAT_MESSAGE: Record<EtatMessage, string> = {
   SENT: 'envoyé',
   DELIVERED: 'remis',

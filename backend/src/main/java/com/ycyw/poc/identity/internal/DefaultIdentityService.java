@@ -8,7 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Mise en oeuvre du contrat publie du contexte Identite. */
+/** Mise en œuvre du contrat publié du contexte Identité. */
 @Service
 public class DefaultIdentityService implements IdentityApi {
 
@@ -21,8 +21,8 @@ public class DefaultIdentityService implements IdentityApi {
     }
 
     /**
-     * Un identifiant inconnu et un mot de passe faux donnent le meme resultat : rien dans la reponse
-     * ne permet de decouvrir quels comptes existent.
+     * Un identifiant inconnu et un mot de passe faux donnent le même résultat : rien dans la réponse
+     * ne permet de découvrir quels comptes existent.
      */
     @Override
     @Transactional(readOnly = true)

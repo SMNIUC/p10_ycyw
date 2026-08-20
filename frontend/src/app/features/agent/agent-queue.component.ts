@@ -10,9 +10,9 @@ import { DemandeEnAttente, ResumeConversation } from '../../core/models';
 /**
  * Poste de l'agent : file d'attente et conversations en cours (US-26).
  *
- * <p>La file se met a jour <b>par le canal temps reel</b> : une demande ouverte sur une autre
- * instance y apparait, et une demande prise par un collegue en disparait sans qu'aucun agent n'ait
- * a recharger sa page. C'est la meme diffusion que celle des messages, sur une autre destination.
+ * <p>La file se met à jour <b>par le canal temps réel</b> : une demande ouverte sur une autre
+ * instance y apparaît, et une demande prise par un collègue en disparait sans qu'aucun agent n'ait
+ * à recharger sa page. C'est la même diffusion que celle des messages, sur une autre destination.
  */
 @Component({
   selector: 'app-agent-queue',
@@ -43,7 +43,7 @@ export class AgentQueueComponent implements OnInit {
     this.api.prendreEnCharge(demande.id).subscribe({
       next: (conversation) => void this.router.navigate(['/conversations', conversation.id]),
       error: (reponse: { status?: number }) => {
-        // 409 : un autre agent a ete plus rapide. Le refus vient du domaine, pas de l'interface.
+        // 409 : un autre agent a été plus rapide. Le refus vient du domaine, pas de l'interface.
         this.erreur.set(
           reponse.status === 409
             ? 'Cette demande vient d’être prise en charge par un autre agent.'

@@ -10,13 +10,18 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
-/** Adaptateur secondaire : persistance des messages. */
+/**
+ * Adaptateur secondaire : persistance des messages.
+ *
+ * <p>Visibilité paquet : voir {@code JpaConversationRepository}, même raison.
+ */
 @Repository
-public class JpaMessageRepository implements MessageRepository {
+class JpaMessageRepository implements MessageRepository {
 
     private final MessageJpaRepository jpa;
 
-    public JpaMessageRepository(MessageJpaRepository jpa) {
+    // Visibilité paquet : voir JpaConversationRepository, même raison.
+    JpaMessageRepository(MessageJpaRepository jpa) {
         this.jpa = jpa;
     }
 

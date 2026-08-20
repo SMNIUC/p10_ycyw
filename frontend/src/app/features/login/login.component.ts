@@ -9,9 +9,9 @@ import { SessionService } from '../../core/session.service';
 /**
  * Connexion.
  *
- * <p>Le choix de l'instance ne figure ici que pour la demonstration : connecter le client a
- * l'instance 1 et l'agent a l'instance 2, puis constater qu'ils dialoguent, est la maniere la plus
- * directe de verifier que la diffusion passe bien par le broker externe.
+ * <p>Le choix de l'instance ne figure ici que pour la démonstration : connecter le client à
+ * l'instance 1 et l'agent à l'instance 2, puis constater qu'ils dialoguent, est la manière la plus
+ * directe de vérifier que la diffusion passe bien par le broker externe.
  */
 @Component({
   selector: 'app-login',
@@ -36,7 +36,7 @@ export class LoginComponent {
     this.enCours.set(true);
     this.instanceService.choisir(this.instanceChoisie);
 
-    // Le jeton anti-rejeu doit provenir de l'instance choisie : on la reinterroge avant d'ecrire.
+    // Le jeton anti-rejeu doit provenir de l'instance choisie : on la réinterroge avant d'écrire.
     this.session.amorcer().subscribe({
       next: () => this.envoyerLesIdentifiants(),
       error: () => this.envoyerLesIdentifiants(),

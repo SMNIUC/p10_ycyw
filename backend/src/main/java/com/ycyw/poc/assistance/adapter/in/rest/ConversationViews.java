@@ -5,7 +5,7 @@ import com.ycyw.poc.assistance.application.readmodel.WaitingConversation;
 import com.ycyw.poc.assistance.domain.model.Conversation;
 import java.time.Instant;
 
-/** Representations REST du contexte Assistance. */
+/** Représentations REST du contexte Assistance. */
 final class ConversationViews {
 
     private ConversationViews() {}

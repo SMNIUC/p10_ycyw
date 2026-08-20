@@ -3,14 +3,14 @@ package com.ycyw.poc.assistance.domain.event;
 import com.ycyw.poc.assistance.domain.model.ConversationId;
 
 /**
- * Evenement du domaine Assistance destine a etre diffuse.
+ * Événement du domaine Assistance destiné à être diffusé.
  *
- * <p>Le domaine decrit <b>ce qui s'est produit</b>, jamais comment le transmettre : il ignore
+ * <p>Le domaine décrit <b>ce qui s'est produit</b>, jamais comment le transmettre : il ignore
  * STOMP, le broker et le format JSON. C'est l'adaptateur secondaire de diffusion qui traduit
- * l'evenement en trame et choisit sa destination.
+ * l'événement en trame et choisit sa destination.
  *
- * <p>L'interface est scellee : ajouter un evenement oblige a traiter le nouveau cas partout ou
- * l'ensemble est parcouru, plutot que de l'oublier silencieusement.
+ * <p>L'interface est scellée : ajouter un événement oblige à traiter le nouveau cas partout où
+ * l'ensemble est parcouru, plutôt que de l'oublier silencieusement.
  */
 public sealed interface ChatEvent
         permits ConversationOpened,
@@ -20,6 +20,6 @@ public sealed interface ChatEvent
                 MessageDelivered,
                 ConversationRead {
 
-    /** Conversation concernee — elle determine la destination de diffusion. */
+    /** Conversation concernée — elle détermine la destination de diffusion. */
     ConversationId conversationId();
 }

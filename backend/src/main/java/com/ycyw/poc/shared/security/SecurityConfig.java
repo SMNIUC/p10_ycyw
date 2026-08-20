@@ -9,9 +9,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -25,18 +26,18 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 /**
- * Socle de securite (DA-17, DA-18).
+ * Socle de sécurité (DA-17, DA-18).
  *
- * <p>Quatre decisions y sont lisibles, chacune rattachee a un constat de l'audit :
+ * <p>Quatre décisions y sont lisibles, chacune rattachee à un constat de l'audit :
  *
  * <ul>
- *   <li><b>BCrypt cout 12</b> pour les empreintes de mot de passe — l'audit releve SHA-1 encore en
- *       service sur la plateforme europeenne (F-11) ;
- *   <li><b>jeton en cookie inaccessible au script</b> plutot qu'en stockage navigateur ;
- *   <li><b>application sans etat</b> : aucune session serveur, condition de la replication en
+ *   <li><b>Argon2id</b> pour les empreintes de mot de passe (DA-17) — l'audit relève SHA-1 encore
+ *       en service sur la plateforme européenne (C-11) ;
+ *   <li><b>jeton en cookie inaccessible au script</b> plutôt qu'en stockage navigateur ;
+ *   <li><b>application sans état</b> : aucune session serveur, condition de la réplication en
  *       plusieurs instances (ENF-19) ;
- *   <li><b>jeton anti-rejeu (CSRF)</b> obligatoire des lors que l'authentification voyage par
- *       cookie : sans lui, un site tiers pourrait declencher une action authentifiee.
+ *   <li><b>jeton anti-rejeu (CSRF)</b> obligatoire dès lors que l'authentification voyage par
+ *       cookie : sans lui, un site tiers pourrait déclencher une action authentifiée.
  * </ul>
  */
 @Configuration
@@ -51,9 +52,9 @@ public class SecurityConfig {
                         csrf ->
                                 csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                                         .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
-                                        // La poignee de main WebSocket est une requete GET : elle
-                                        // n'est pas concernee par le jeton anti-rejeu, et reste
-                                        // protegee par le controle d'origine du serveur.
+                                        // La poignée de main WebSocket est une requête GET : elle
+                                        // n'est pas concernée par le jeton anti-rejeu, et reste
+                                        // protégée par le contrôle d'origine du serveur.
                                         .ignoringRequestMatchers("/ws/**"))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .sessionManagement(
@@ -81,18 +82,28 @@ public class SecurityConfig {
                         handling ->
                                 handling.authenticationEntryPoint(
                                         new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
-                .httpBasic(basic -> basic.disable())
-                .formLogin(form -> form.disable())
+                // Aucun de ces deux mécanismes n'a de place ici : l'authentification passe par un
+                // jeton en cookie (DA-18). Les laisser actifs offrirait un second chemin d'entrée,
+                // non couvert par les décisions prises.
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
                 .build();
     }
 
     /**
-     * Cout 12, aligne sur la plateforme la plus saine de l'existant (F-11). Le cout est un
-     * parametre de securite, pas une preference : il rend l'attaque par force brute couteuse.
+     * <b>Argon2id</b>, conformément à DA-17. Le choix n'est pas une préférence : la fonction est
+     * lente <i>et</i> gourmande en mémoire, ce qui prive un attaquant du gain qu'il tire d'un
+     * matériel spécialisé — là où SHA-1, rapide par conception, le lui offre (C-11).
+     *
+     * <p>C'est aussi la généralisation d'une pratique déjà en service au Canada (F-04) : la
+     * décision diffuse un savoir-faire interne, elle n'en acquiert pas un nouveau.
+     *
+     * <p>Paramètres par défaut de Spring Security : 16 Mo de mémoire, 2 itérations, sel de
+     * 16 octets. L'empreinte encodée tient en 97 caractères, sous la limite de la colonne.
      */
     @Bean
     PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(12);
+        return Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
     }
 
     @Bean
@@ -107,7 +118,7 @@ public class SecurityConfig {
                 .build();
     }
 
-    /** Le role porte par le jeton devient une habilitation Spring Security. */
+    /** Le rôle porté par le jeton devient une habilitation Spring Security. */
     static JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(

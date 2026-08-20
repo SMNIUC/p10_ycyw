@@ -6,9 +6,14 @@
 
 <section aria-labelledby="titre-file">
   <h2 id="titre-file">Demandes en attente</h2>
-  <!-- Region de journal : l'arrivee d'une demande est annoncee sans deplacer le focus, qui peut
-       se trouver ailleurs dans la page. -->
-  <div role="log" aria-live="polite" aria-relevant="additions text">
+  <!-- Région de journal : l'arrivée d'une demande est annoncée sans déplacer le focus, qui peut
+       se trouver ailleurs dans la page.
+
+       aria-relevant="additions" et non la valeur par défaut « additions text » : le temps d'attente
+       de chaque demande est recalculé à chaque événement de la file, et « text » ferait annoncer
+       ces compteurs qui défilent au lieu des seules demandes qui arrivent. Même raisonnement que
+       pour la conversation. -->
+  <div role="log" aria-live="polite" aria-relevant="additions">
     @if (file().length === 0) {
       <p>Aucune demande en attente.</p>
     } @else {
@@ -22,7 +27,7 @@
               Reçue le {{ demande.openedAt | date: 'medium' }} — en attente depuis
               {{ attente(demande) }}
             </p>
-            <!-- Le libelle du bouton rappelle l'objet de la demande : hors contexte visuel,
+            <!-- Le libellé du bouton rappelle l'objet de la demande : hors contexte visuel,
                  « Prendre en charge » seul ne dirait pas laquelle. -->
             <button type="button" (click)="prendreEnCharge(demande)">
               Prendre en charge : {{ demande.subject }}

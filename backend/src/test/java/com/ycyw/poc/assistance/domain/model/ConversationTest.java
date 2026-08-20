@@ -13,13 +13,13 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 /**
- * Regles de l'agregat Conversation.
+ * Règles de l'agrégat Conversation.
  *
- * <p>Aucune base, aucun broker, aucun contexte applicatif : c'est precisement ce que l'architecture
- * hexagonale rend possible (DA-05). Ces tests s'executent en quelques millisecondes et n'echouent
+ * <p>Aucune base, aucun broker, aucun contexte applicatif : c'est précisément ce que l'architecture
+ * hexagonale rend possible (DA-05). Ces tests s'executent en quelques millisecondes et n'échouent
  * jamais pour une raison d'infrastructure.
  */
-@DisplayName("Agregat Conversation")
+@DisplayName("Agrégat Conversation")
 class ConversationTest {
 
     private static final Instant OPENED_AT = Instant.parse("2026-03-01T09:00:00Z");
@@ -60,7 +60,7 @@ class ConversationTest {
         }
 
         @Test
-        @DisplayName("est refusee a un second agent : la demande n'est plus proposee")
+        @DisplayName("est refusée à un second agent : la demande n'est plus proposée")
         void secondAgentRefuse() {
             Conversation conversation = uneConversationEnAttente();
             conversation.takeOver(SAM, OPENED_AT.plusSeconds(120));
@@ -72,7 +72,7 @@ class ConversationTest {
         }
 
         @Test
-        @DisplayName("n'est pas ouverte a un client")
+        @DisplayName("n'est pas ouverte à un client")
         void clientNePrendPasEnCharge() {
             Conversation conversation = uneConversationEnAttente();
 
@@ -86,7 +86,7 @@ class ConversationTest {
     class Envoi {
 
         @Test
-        @DisplayName("est refuse a qui ne participe pas a la conversation")
+        @DisplayName("est refusé à qui ne participe pas à la conversation")
         void tiersRefuse() {
             Conversation conversation = uneConversationEnAttente();
             ParticipantId intrus = ParticipantId.customer(UUID.randomUUID());
@@ -102,7 +102,7 @@ class ConversationTest {
         }
 
         @Test
-        @DisplayName("est refuse apres cloture")
+        @DisplayName("est refusé après clôture")
         void conversationCloturee() {
             Conversation conversation = uneConversationEnAttente();
             conversation.close(ALICE, OPENED_AT.plusSeconds(600));
@@ -118,7 +118,7 @@ class ConversationTest {
         }
 
         @Test
-        @DisplayName("produit un message a l'etat « envoye »")
+        @DisplayName("produit un message à l'état « envoyé »")
         void messageEnvoye() {
             Conversation conversation = uneConversationEnAttente();
 
@@ -152,7 +152,7 @@ class ConversationTest {
         }
 
         @Test
-        @DisplayName("est refuse a qui ne participe pas")
+        @DisplayName("est refusé à qui ne participe pas")
         void tiersRefuse() {
             Conversation conversation = uneConversationEnAttente();
 

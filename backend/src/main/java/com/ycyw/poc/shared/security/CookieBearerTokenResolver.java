@@ -8,12 +8,12 @@ import org.springframework.security.oauth2.server.resource.web.BearerTokenResolv
 import org.springframework.stereotype.Component;
 
 /**
- * Le jeton est lu dans le cookie, jamais dans un en-tete {@code Authorization}.
+ * Le jeton est lu dans le cookie, jamais dans un en-tête {@code Authorization}.
  *
- * <p>Consequence directe de DA-18 : si le jeton pouvait aussi etre presente en en-tete, un script
- * de page devrait pouvoir le lire pour le poser — et l'interet du cookie inaccessible au script
- * disparaitrait. La poignee de main WebSocket beneficie du meme mecanisme : le navigateur joint le
- * cookie a la requete de bascule de protocole, sans qu'aucun code n'ait a manipuler le jeton.
+ * <p>Conséquence directe de DA-18 : si le jeton pouvait aussi être présenté en en-tête, un script
+ * de page devrait pouvoir le lire pour le poser — et l'intérêt du cookie inaccessible au script
+ * disparaîtrait. La poignée de main WebSocket bénéficie du même mécanisme : le navigateur joint le
+ * cookie à la requête de bascule de protocole, sans qu'aucun code n'ait à manipuler le jeton.
  */
 @Component
 public class CookieBearerTokenResolver implements BearerTokenResolver {
@@ -38,7 +38,7 @@ public class CookieBearerTokenResolver implements BearerTokenResolver {
                 .orElse(null);
     }
 
-    /** Utilitaire de lecture cote poignee de main WebSocket. */
+    /** Utilitaire de lecture côté poignée de main WebSocket. */
     public Optional<String> read(HttpServletRequest request) {
         return Optional.ofNullable(resolve(request));
     }

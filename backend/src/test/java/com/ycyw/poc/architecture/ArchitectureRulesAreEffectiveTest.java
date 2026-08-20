@@ -10,16 +10,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
- * Verifie que les regles d'architecture detectent ce qu'elles pretendent detecter.
+ * Vérifie que les règles d'architecture détectent ce qu'elles prétendent détecter.
  *
- * <p><b>Pourquoi ce test existe.</b> « Aucune violation » peut signifier deux choses opposees : que
- * le code est sain, ou que le controle ne controle rien — un paquet mal orthographie, un predicat
- * qui ne rencontre jamais d'element. Un garde-fou dont personne n'a verifie qu'il retient quelque
+ * <p><b>Pourquoi ce test existe.</b> « Aucune violation » peut signifier deux choses opposées : que
+ * le code est sain, ou que le contrôle ne contrôle rien — un paquet mal orthographie, un prédicat
+ * qui ne rencontre jamais d'élément. Un garde-fou dont personne n'a vérifie qu'il retient quelque
  * chose donne une fausse assurance, ce qui est pire que pas de garde-fou du tout.
  *
- * <p>Chaque regle est donc confrontee a une classe volontairement fautive, et doit echouer.
+ * <p>Chaque règle est donc confrontee à une classe volontairement fautive, et doit échouer.
  */
-@DisplayName("Les regles d'architecture sont effectives")
+@DisplayName("Les règles d'architecture sont effectives")
 class ArchitectureRulesAreEffectiveTest {
 
     private static final JavaClasses DOMAINE_FAUTIF =
@@ -29,16 +29,22 @@ class ArchitectureRulesAreEffectiveTest {
             new ClassFileImporter().importPackages("com.ycyw.poc.assistance.fixture");
 
     @Test
-    @DisplayName("les classes fautives sont bien presentes — sans quoi le test ne prouverait rien")
+    @DisplayName("les classes fautives sont bien présentes — sans quoi le test ne prouverait rien")
     void lesFixturesExistent() {
         assertThat(DOMAINE_FAUTIF).isNotEmpty();
         assertThat(MODULE_FAUTIF).isNotEmpty();
     }
 
     @Test
-    @DisplayName("refuse une dependance du domaine vers le framework")
+    @DisplayName("refuse une dépendance du domaine vers le framework")
     void dependanceVersLeFramework() {
         assertRuleRejects(ArchitectureRulesTest.le_domaine_ignore_le_framework, DOMAINE_FAUTIF);
+    }
+
+    @Test
+    @DisplayName("refuse une dépendance du domaine vers un adaptateur")
+    void dependanceVersUnAdaptateur() {
+        assertRuleRejects(ArchitectureRulesTest.le_domaine_ignore_les_adaptateurs, DOMAINE_FAUTIF);
     }
 
     @Test
@@ -50,7 +56,7 @@ class ArchitectureRulesAreEffectiveTest {
     }
 
     @Test
-    @DisplayName("refuse un accesseur en ecriture public dans le domaine")
+    @DisplayName("refuse un accesseur en écriture public dans le domaine")
     void accesseurEnEcriture() {
         assertRuleRejects(
                 ArchitectureRulesTest.aucun_accesseur_en_ecriture_public_dans_le_domaine,
@@ -58,13 +64,13 @@ class ArchitectureRulesAreEffectiveTest {
     }
 
     @Test
-    @DisplayName("refuse qu'un module atteigne l'interieur d'un autre")
+    @DisplayName("refuse qu'un module atteigne l'intérieur d'un autre")
     void traverseeDeModule() {
         assertRuleRejects(ArchitectureRulesTest.les_modules_ne_se_traversent_pas, MODULE_FAUTIF);
     }
 
     @Test
-    @DisplayName("refuse une table qui ne declare pas le schema de son module")
+    @DisplayName("refuse une table qui ne déclare pas le schéma de son module")
     void schemaNonDeclare() {
         assertRuleRejects(
                 ArchitectureRulesTest.chaque_entite_declare_le_schema_de_son_module, MODULE_FAUTIF);
@@ -72,7 +78,7 @@ class ArchitectureRulesAreEffectiveTest {
 
     private static void assertRuleRejects(ArchRule rule, JavaClasses classesFautives) {
         assertThatThrownBy(() -> rule.check(classesFautives))
-                .as("la regle « %s » doit refuser la classe fautive", rule.getDescription())
+                .as("la règle « %s » doit refuser la classe fautive", rule.getDescription())
                 .isInstanceOf(AssertionError.class);
     }
 }

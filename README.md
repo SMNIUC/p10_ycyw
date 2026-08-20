@@ -42,9 +42,9 @@ d'architecture fonctionnent ensemble sur un cas réel**.
 | Persistance des messages **avant** diffusion | DA-11 — condition de la reprise sans perte (US-24) | `MessagingService.post` |
 | Domaine testable sans aucune infrastructure | DA-05, DA-06 — ports et adaptateurs | `assistance/domain`, tests unitaires |
 | Frontières de module vérifiées **au build** | DA-04 | `ArchitectureRulesTest` |
-| Structure de données réellement mise en œuvre | DA-14, § 6 de la proposition | `db/migration/V1__…sql` |
-| Accessibilité du composant de messagerie | DA-20, § 10.2 | `conversation.component.ts` |
-| Environnement conteneurisé démarrant en une commande | DA-13, § 12.4 | `docker-compose.yml` |
+| Structure de données réellement mise en œuvre | DA-10, § 7 de la proposition | `db/migration/V1__…sql` |
+| Accessibilité du composant de messagerie | DA-20, § 11.2 | `conversation.component.ts` |
+| Environnement conteneurisé démarrant en une commande | DA-13, § 13.5 | `docker-compose.yml` |
 
 **Le point central, en une phrase.** L'exigence de haute disponibilité impose **plusieurs instances**
 de l'application. Deux interlocuteurs d'une même conversation peuvent donc être connectés à **deux
@@ -358,15 +358,16 @@ mécaniquement.
 
 | Table | Rôle |
 |---|---|
-| `identity.app_user` | Comptes. Empreinte BCrypt (coût 12), jamais le mot de passe |
+| `identity.app_user` | Comptes. Empreinte **Argon2id**, jamais le mot de passe |
 | `assistance.conversation` | Demande d'assistance : objet, état, client, agent, verrou optimiste |
 | `assistance.participant` | Présence dans une conversation **et marqueur de lecture** — c'est lui qui porte le compteur de messages non lus |
 | `assistance.message` | Message, auteur, horodatage et **état d'acheminement** (envoyé, remis, lu) |
 
 **Aucune clé étrangère ne relie `assistance` à `identity`.** Une conversation référence un
-utilisateur par son identifiant seul. Ce n'est pas un oubli : c'est ce qui rend le module Assistance
-extractible sans refonte, et ce qui permettra plus tard d'anonymiser un compte sans casser
-l'historique des échanges.
+utilisateur par son identifiant seul. Ce n'est pas un oubli, c'est la règle posée au § 7.1 de la
+proposition : les clés étrangères sont libres à l'intérieur d'un schéma, proscrites entre schémas.
+C'est ce qui rend le module Assistance extractible sans refonte, et ce qui permettra plus tard
+d'anonymiser un compte sans casser l'historique des échanges.
 
 Le schéma est produit par des **migrations versionnées** (`backend/src/main/resources/db/migration`),
 jamais par le framework de persistance, qui se contente de **valider** au démarrage que le code et
@@ -378,7 +379,7 @@ la base ne divergent pas.
 
 | Mesure | Motif |
 |---|---|
-| Empreintes **BCrypt coût 12** | L'audit relève SHA-1 encore en service sur la plateforme européenne : la preuve de concept applique la correction |
+| Empreintes **Argon2id** (DA-17) | L'audit relève SHA-1 encore en service sur la plateforme européenne ; Argon2id est déjà en usage au Canada. La décision généralise une pratique interne, et la preuve de concept l'applique |
 | Jeton de session en **cookie inaccessible au script** | Un vol par injection de script devient sans effet ; le code client ne voit jamais le jeton |
 | **Aucune session serveur** | Condition de la réplication en plusieurs instances |
 | **Jeton anti-rejeu** sur toute écriture | Nécessaire dès lors que l'authentification voyage par cookie |
@@ -457,10 +458,10 @@ l'apparence. L'accessibilité, elle, n'est pas minimale.
 Deux documents accompagnent cette preuve de concept. **Ils ne sont pas versionnés dans ce dépôt**
 et sont remis au format PDF avec le reste du projet :
 
-| Document                                         | Contenu                                                                                                                                                                                                                                   |
-|--------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Cahier des charges                               | Analyse des besoins utilisateurs et spécifications fonctionnelles — user stories priorisées et critères d'acceptation                                                                                                                     |
-| Audit de l'existant + Proposition d'architecture | Constats chiffrés sur les quatre plateformes actuelles, au regard de la maintenabilité, de la performance et de l'évolutivité + Décisions d'architecture, modélisation UML, modèle de données, choix technologiques et leur justification |
+| Document | Contenu |
+|---|---|
+| Cahier des charges | Analyse des besoins utilisateurs et spécifications fonctionnelles — user stories priorisées et critères d'acceptation |
+| Proposition d'architecture | **L'audit de l'existant** — constats chiffrés sur les quatre plateformes, au regard de la maintenabilité, de la performance et de l'évolutivité (§ 2, détail en annexe A) — puis les décisions d'architecture, la modélisation UML, le modèle de données et les choix technologiques justifiés |
 
 Les références de type **DA-11**, **US-24** ou **ENF-19** employées dans ce document et dans les
 commentaires du code renvoient à ces deux livrables : décisions d'architecture, user stories et

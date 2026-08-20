@@ -4,13 +4,13 @@ import java.time.Instant;
 import java.util.Objects;
 
 /**
- * Message echange dans une conversation.
+ * Message échange dans une conversation.
  *
- * <p><b>Pourquoi le message n'est pas charge dans l'agregat.</b> Conversation est la racine
- * d'agregat (proposition d'architecture, § 4.5) : elle protege les invariants d'appartenance et de
- * cycle de vie. Les messages, eux, sont crees par la racine puis persistes par leur propre port :
- * charger l'historique complet a chaque envoi couterait davantage a chaque message echange, sans
- * proteger aucun invariant supplementaire — un message ne depend pas des precedents.
+ * <p><b>Pourquoi le message n'est pas charge dans l'agrégat.</b> Conversation est la racine
+ * d'agrégat (proposition d'architecture, § 5.4) : elle protege les invariants d'appartenance et de
+ * cycle de vie. Les messages, eux, sont créés par la racine puis persistes par leur propre port :
+ * charger l'historique complet à chaque envoi coûterait davantage à chaque message échange, sans
+ * proteger aucun invariant supplémentaire — un message ne dépend pas des précédents.
  */
 public final class Message {
 
@@ -45,7 +45,7 @@ public final class Message {
         return new Message(id, conversationId, author, body, sentAt, DeliveryState.SENT);
     }
 
-    /** Reconstruction depuis la persistance. Reserve a l'adaptateur secondaire. */
+    /** Reconstruction depuis la persistance. Réservé à l'adaptateur secondaire. */
     public static Message rehydrate(
             MessageId id,
             ConversationId conversationId,
@@ -56,7 +56,7 @@ public final class Message {
         return new Message(id, conversationId, author, body, sentAt, state);
     }
 
-    /** Le destinataire a recu le message sur son canal temps reel. */
+    /** Le destinataire a reçu le message sur son canal temps réel. */
     public void markDelivered() {
         advanceTo(DeliveryState.DELIVERED);
     }

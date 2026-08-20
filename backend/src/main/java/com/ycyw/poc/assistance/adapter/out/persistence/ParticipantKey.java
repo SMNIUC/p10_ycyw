@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
-/** Cle composee de la table {@code assistance.participant}. */
+/** Clé composée de la table {@code assistance.participant}. */
 @Embeddable
 public class ParticipantKey implements Serializable {
 
@@ -23,10 +23,6 @@ public class ParticipantKey implements Serializable {
     ParticipantKey(UUID conversationId, UUID userId) {
         this.conversationId = conversationId;
         this.userId = userId;
-    }
-
-    UUID getConversationId() {
-        return conversationId;
     }
 
     UUID getUserId() {

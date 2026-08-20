@@ -13,20 +13,20 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Racine d'agregat du contexte Assistance.
+ * Racine d'agrégat du contexte Assistance.
  *
- * <p>Invariants portes ici, et nulle part ailleurs :
+ * <p>Invariants portés ici, et nulle part ailleurs :
  *
  * <ol>
- *   <li>seul un participant de la conversation peut y ecrire (US-24) ;
- *   <li>une conversation cloturee n'accepte plus de message ;
- *   <li>une conversation deja prise en charge ne peut pas etre reprise par un second agent
- *       (US-26 : « elle ne lui est plus proposee ») ;
+ *   <li>seul un participant de la conversation peut y écrire (US-24) ;
+ *   <li>une conversation clôturée n'accepte plus de message ;
+ *   <li>une conversation déjà prise en charge ne peut pas être reprise par un second agent
+ *       (US-26 : « elle ne lui est plus proposée ») ;
  *   <li>un marqueur de lecture n'est jamais recule.
  * </ol>
  *
- * <p>Aucune annotation de framework, aucun accesseur en ecriture public : ces deux regles sont
- * verifiees au build par les tests d'architecture (DA-04), et non laissees a la vigilance.
+ * <p>Aucune annotation de framework, aucun accesseur en écriture public : ces deux règles sont
+ * vérifiées au build par les tests d'architecture (DA-04), et non laissées à la vigilance.
  */
 public final class Conversation {
 
@@ -81,7 +81,7 @@ public final class Conversation {
         return conversation;
     }
 
-    /** Reconstruction depuis la persistance. Reserve a l'adaptateur secondaire. */
+    /** Reconstruction depuis la persistance. Réservé à l'adaptateur secondaire. */
     public static Conversation rehydrate(
             ConversationId id,
             String subject,
@@ -101,8 +101,8 @@ public final class Conversation {
     /**
      * Prise en charge par un agent (US-26).
      *
-     * @throws ConversationAlreadyTakenException si un agent l'a deja prise, meme le meme
-     * @throws ConversationClosedException si elle est cloturee
+     * @throws ConversationAlreadyTakenException si un agent l'a déjà prise, même le même
+     * @throws ConversationClosedException si elle est clôturée
      */
     public void takeOver(ParticipantId newAgent, Instant at) {
         Objects.requireNonNull(newAgent, "agent");
@@ -119,7 +119,7 @@ public final class Conversation {
         this.participants.put(newAgent.userId(), Participant.joining(newAgent, at));
     }
 
-    /** Cloture par l'un des participants (US-26 : « quand je la cloture, le client en est informe »). */
+    /** Clôture par l'un des participants (US-26 : « quand je la clôture, le client en est informé »). */
     public void close(ParticipantId by, Instant at) {
         requireOpen();
         requireParticipant(by);
@@ -128,10 +128,10 @@ public final class Conversation {
     }
 
     /**
-     * Cree un message dans la conversation.
+     * Crée un message dans la conversation.
      *
-     * <p>La creation reste dans l'agregat parce que ce sont ses regles — appartenance et cycle de
-     * vie — qui autorisent ou refusent l'ecriture. Le service applicatif ne fait que persister puis
+     * <p>La création reste dans l'agrégat parce que ce sont ses règles — appartenance et cycle de
+     * vie — qui autorisent ou refusent l'écriture. Le service applicatif ne fait que persister puis
      * diffuser l'objet retourne.
      */
     public Message post(MessageId messageId, ParticipantId author, MessageBody body, Instant at) {
@@ -172,7 +172,7 @@ public final class Conversation {
         }
         String stripped = subject.strip();
         if (stripped.length() > 160) {
-            throw new IllegalArgumentException("L'objet est limite a 160 caracteres.");
+            throw new IllegalArgumentException("L'objet est limité à 160 caractères.");
         }
         return stripped;
     }

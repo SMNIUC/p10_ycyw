@@ -8,10 +8,10 @@ import { Conversation, DemandeEnAttente, Message, ResumeConversation } from './m
 /**
  * Appels REST du contexte Assistance.
  *
- * <p>Le canal REST et le canal temps reel se repartissent les roles : REST porte ce qui doit etre
+ * <p>Le canal REST et le canal temps réel se répartissent les rôles : REST porte ce qui doit être
  * fiable et rejouable — ouverture d'une demande, historique, file d'attente, prise en charge —, le
- * temps reel porte la livraison anticipee des messages. C'est pourquoi la reprise apres coupure
- * passe par `historique()` : la base fait autorite, pas ce que le navigateur avait en memoire.
+ * temps réel porte la livraison anticipée des messages. C'est pourquoi la reprise après coupure
+ * passe par `historique()` : la base fait autorité, pas ce que le navigateur avait en mémoire.
  */
 @Injectable({ providedIn: 'root' })
 export class AssistanceApiService {

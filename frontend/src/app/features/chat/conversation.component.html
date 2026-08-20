@@ -1,6 +1,6 @@
 <h1>Conversation</h1>
 
-<!-- Region d'etat : connexion et cycle de vie de la conversation, en texte. Aucune information
+<!-- Région d'état : connexion et cycle de vie de la conversation, en texte. Aucune information
      n'est portee par une icone ni par une couleur seule (ENF-03). -->
 <p role="status">{{ libelleConnexion() }} — conversation {{ libelleStatut() }}</p>
 
@@ -9,17 +9,21 @@
 }
 
 <!--
-  Le cœur de l'accessibilite de ce composant, et le critere le plus exigeant d'US-24 :
+  Le cœur de l'accessibilité de ce composant, et le critère le plus exigeant d'US-24 :
 
   role="log"                 zone dont le contenu s'ajoute au fil du temps ;
-  aria-live="polite"         l'annonce attend une pause du lecteur d'ecran, elle n'interrompt pas ;
-  aria-relevant="additions"  seuls les ajouts sont annonces, pas la reecriture des etats ;
-  tabindex="0"               la zone est atteignable au clavier, donc defilable sans souris.
+  aria-live="polite"         l'annonce attend une pause du lecteur d'écran, elle n'interrompt pas ;
+  aria-relevant="additions"  seuls les ajouts sont annoncés, pas la réécriture des états ;
+  tabindex="0"               la zone est atteignable au clavier, donc défilable sans souris.
 
-  Le focus n'est JAMAIS deplace vers un message qui arrive : cela interromprait la saisie en cours.
+  Le rôle est porté par un conteneur, pas par la liste : « log » n'est pas un rôle admis sur un
+  <ol> et y écraserait le rôle implicite « list », donc l'annonce du nombre de messages et la
+  navigation de liste. La liste reste une liste, le conteneur devient la région de journal.
+
+  Le focus n'est JAMAIS déplacé vers un message qui arrive : cela interromprait la saisie en cours.
   C'est l'erreur classique de ces composants.
 -->
-<ol
+<div
   class="conversation"
   role="log"
   aria-live="polite"
@@ -27,22 +31,24 @@
   aria-label="Messages de la conversation"
   tabindex="0"
 >
-  @for (message of messages(); track message.id) {
-    <li [class]="message.authorRole === 'AGENT' ? 'message-agent' : 'message-client'">
-      <p class="message-entete">
-        <span>{{ auteur(message) }}</span>
-        <span> — {{ message.sentAt | date: 'short' }}</span>
-        <!-- Etat d'acheminement : envoye, remis, lu — en toutes lettres (US-24). -->
-        @if (estDeMoi(message)) {
-          <span> — {{ libelleEtat(message) }}</span>
-        }
-      </p>
-      <p>{{ message.body }}</p>
-    </li>
-  } @empty {
-    <li>Aucun message pour l’instant.</li>
-  }
-</ol>
+  <ol>
+    @for (message of messages(); track message.id) {
+      <li [class]="message.authorRole === 'AGENT' ? 'message-agent' : 'message-client'">
+        <p class="message-entete">
+          <span>{{ auteur(message) }}</span>
+          <span> — {{ message.sentAt | date: 'short' }}</span>
+          <!-- État d'acheminement : envoyé, remis, lu — en toutes lettres (US-24). -->
+          @if (estDeMoi(message)) {
+            <span> — {{ libelleEtat(message) }}</span>
+          }
+        </p>
+        <p>{{ message.body }}</p>
+      </li>
+    } @empty {
+      <li>Aucun message pour l’instant.</li>
+    }
+  </ol>
+</div>
 
 <form (ngSubmit)="envoyer()">
   <div class="champ">

@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 /**
- * Acces Spring Data. Interne a l'adaptateur : le domaine ne connait que le port
+ * Accès Spring Data. Interne à l'adaptateur : le domaine ne connaît que le port
  * {@code ConversationRepository}.
  */
 interface ConversationJpaRepository extends JpaRepository<ConversationEntity, UUID> {

@@ -16,10 +16,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Representation persistante d'un message.
+ * Représentation persistante d'un message.
  *
- * <p>La conversation est referencee par son identifiant, sans association JPA : le message est
- * charge par son propre port, jamais par navigation depuis l'agregat (voir {@code Message}).
+ * <p>La conversation est référencée par son identifiant, sans association JPA : le message est
+ * charge par son propre port, jamais par navigation depuis l'agrégat (voir {@code Message}).
  */
 @Entity
 @Table(name = "message", schema = "assistance")

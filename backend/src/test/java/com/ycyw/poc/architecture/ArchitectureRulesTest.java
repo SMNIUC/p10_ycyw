@@ -16,15 +16,15 @@ import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
 import jakarta.persistence.Table;
 
 /**
- * Frontieres verifiees au build (DA-04).
+ * Frontières vérifiées au build (DA-04).
  *
  * <p><b>Pourquoi ce fichier existe.</b> L'audit de l'existant ne constate pas une divergence
- * decidee : il constate une divergence <i>progressive</i>, installee sans que personne ne la
- * choisisse (constat C-02). Une frontiere seulement documentee subit exactement le meme sort — elle
- * s'erode a chaque echeance serree, un raccourci a la fois.
+ * décidée : il constate une divergence <i>progressive</i>, installée sans que personne ne la
+ * choisisse (constat C-02). Une frontière seulement documentée subit exactement le même sort — elle
+ * s'erode à chaque échéance serrée, un raccourci à la fois.
  *
- * <p>Chaque regle ci-dessous echoue au build, avec un message qui renvoie a la decision
- * d'architecture qu'elle protege. C'est la difference entre une convention — qui se contourne un
+ * <p>Chaque règle ci-dessous échoué au build, avec un message qui renvoie à la décision
+ * d'architecture qu'elle protege. C'est la différence entre une convention — qui se contourne un
  * vendredi soir — et une contrainte.
  */
 @AnalyzeClasses(
@@ -36,7 +36,7 @@ class ArchitectureRulesTest {
     private static final String SERVICES = "..assistance.application..";
 
     // ---------------------------------------------------------------------------------------
-    // Regle 1 — le domaine ne depend d'aucun element d'infrastructure (DA-05)
+    // Règle 1 — le domaine ne dépend d'aucun élément d'infrastructure (DA-05)
     // ---------------------------------------------------------------------------------------
 
     @ArchTest
@@ -54,7 +54,7 @@ class ArchitectureRulesTest {
                             "com.fasterxml.jackson..")
                     .because(
                             "DA-05 : le domaine et les cas d'usage doivent rester testables sans"
-                                    + " infrastructure et survivre a un changement de framework");
+                                    + " infrastructure et survivre à un changement de framework");
 
     @ArchTest
     static final ArchRule le_domaine_ignore_les_adaptateurs =
@@ -65,19 +65,19 @@ class ArchitectureRulesTest {
                     .dependOnClassesThat()
                     .resideInAPackage("..assistance.adapter..")
                     .because(
-                            "DA-05 : les dependances pointent vers le domaine, jamais l'inverse."
-                                    + " Le domaine appelle la persistance a travers un port, et"
-                                    + " c'est la persistance qui depend de lui");
+                            "DA-05 : les dépendances pointent vers le domaine, jamais l'inverse."
+                                    + " Le domaine appelle la persistance à travers un port, et"
+                                    + " c'est la persistance qui dépend de lui");
 
     // ---------------------------------------------------------------------------------------
-    // Regle 2 — aucune classe du domaine n'expose d'accesseur en ecriture public (§ 4.5)
+    // Règle 2 — aucune classe du domaine n'expose d'accesseur en écriture public (§ 5.4)
     // ---------------------------------------------------------------------------------------
 
     /**
-     * Le controle porte sur la forme la plus repandue de fuite d'invariant : l'accesseur en
-     * ecriture. Il est le garde-fou mecanique de la regle « aucun service ne modifie l'etat d'un
-     * agregat autrement qu'en appelant une de ses methodes » — un service ne peut pas contourner
-     * l'agregat s'il n'existe aucun moyen de lui imposer un etat.
+     * Le contrôle porte sur la forme la plus répandue de fuite d'invariant : l'accesseur en
+     * écriture. Il est le garde-fou mécanique de la règle « aucun service ne modifie l'état d'un
+     * agrégat autrement qu'en appelant une de ses méthodes » — un service ne peut pas contourner
+     * l'agrégat s'il n'existe aucun moyen de lui imposer un état.
      */
     @ArchTest
     static final ArchRule aucun_accesseur_en_ecriture_public_dans_le_domaine =
@@ -90,12 +90,12 @@ class ArchitectureRulesTest {
                     .should()
                     .notBePublic()
                     .because(
-                            "§ 4.5 : les invariants sont portes par les methodes de l'agregat ;"
-                                    + " un accesseur en ecriture public permettrait de les"
+                            "§ 5.4 : les invariants sont portés par les méthodes de l'agrégat ;"
+                                    + " un accesseur en écriture public permettrait de les"
                                     + " contourner");
 
     // ---------------------------------------------------------------------------------------
-    // Regle 3 — aucune classe du domaine ne porte d'annotation de framework (§ 4.5)
+    // Règle 3 — aucune classe du domaine ne porte d'annotation de framework (§ 5.4)
     // ---------------------------------------------------------------------------------------
 
     @ArchTest
@@ -105,11 +105,11 @@ class ArchitectureRulesTest {
                     .resideInAnyPackage(DOMAINE, SERVICES)
                     .should(porterUneAnnotationDeFramework())
                     .because(
-                            "§ 4.5 : une annotation de framework dans le domaine y fait entrer une"
-                                    + " dependance technique par la porte de derriere");
+                            "§ 5.4 : une annotation de framework dans le domaine y fait entrer une"
+                                    + " dépendance technique par la porte de derrière");
 
     // ---------------------------------------------------------------------------------------
-    // Regle 4 — aucun module n'atteint l'interieur d'un autre (DA-02, DA-04)
+    // Règle 4 — aucun module n'atteint l'intérieur d'un autre (DA-02, DA-04)
     // ---------------------------------------------------------------------------------------
 
     @ArchTest
@@ -121,17 +121,17 @@ class ArchitectureRulesTest {
                     .dependOnClassesThat()
                     .resideInAPackage("..identity.internal..")
                     .because(
-                            "DA-02 : un module n'accede qu'au contrat publie d'un autre — ici"
-                                    + " IdentityApi —, jamais a ses classes internes");
+                            "DA-02 : un module n'accède qu'au contrat publié d'un autre — ici"
+                                    + " IdentityApi —, jamais à ses classes internes");
 
     // ---------------------------------------------------------------------------------------
-    // Regle 5 — aucune requete ne franchit une frontiere de schema (§ 6.1)
+    // Règle 5 — aucune requête ne franchit une frontière de schéma (§ 7.1)
     // ---------------------------------------------------------------------------------------
 
     /**
-     * Le cloisonnement par schema n'a d'effet que si chaque table declare le sien. Une entite sans
-     * schema explicite atterrirait dans le schema par defaut de la connexion, et la frontiere
-     * deviendrait invisible — donc infranchissable a personne.
+     * Le cloisonnement par schéma n'a d'effet que si chaque table declare le sien. Une entité sans
+     * schéma explicite atterrirait dans le schéma par défaut de la connexion, et la frontière
+     * deviendrait invisible — donc infranchissable à personne.
      */
     @ArchTest
     static final ArchRule chaque_entite_declare_le_schema_de_son_module =
@@ -139,11 +139,11 @@ class ArchitectureRulesTest {
                     .that(sontDesEntitesPersistantes())
                     .should(declarerLeSchemaDeLeurModule())
                     .because(
-                            "§ 6.1 : le cloisonnement par schema materialise la frontiere de"
-                                    + " module et permet de la verifier");
+                            "§ 7.1 : le cloisonnement par schéma matérialise la frontière de"
+                                    + " module et permet de la vérifier");
 
     // ---------------------------------------------------------------------------------------
-    // Conditions personnalisees
+    // Conditions personnalisées
     // ---------------------------------------------------------------------------------------
 
     private static ArchCondition<JavaClass> porterUneAnnotationDeFramework() {
@@ -173,7 +173,7 @@ class ArchitectureRulesTest {
     }
 
     private static DescribedPredicate<JavaClass> sontDesEntitesPersistantes() {
-        return new DescribedPredicate<>("sont des entites persistantes") {
+        return new DescribedPredicate<>("sont des entités persistantes") {
             @Override
             public boolean test(JavaClass javaClass) {
                 return javaClass.isAnnotatedWith(Table.class);
@@ -182,7 +182,7 @@ class ArchitectureRulesTest {
     }
 
     private static ArchCondition<JavaClass> declarerLeSchemaDeLeurModule() {
-        return new ArchCondition<>("declarer le schema de leur module") {
+        return new ArchCondition<>("déclarer le schéma de leur module") {
             @Override
             public void check(JavaClass item, ConditionEvents events) {
                 String schema = item.getAnnotationOfType(Table.class).schema();
@@ -192,7 +192,7 @@ class ArchitectureRulesTest {
                             SimpleConditionEvent.violated(
                                     item,
                                     item.getName()
-                                            + " declare le schema « "
+                                            + " déclare le schéma « "
                                             + schema
                                             + " » alors que son module impose « "
                                             + attendu

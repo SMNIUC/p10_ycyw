@@ -5,7 +5,7 @@ import java.time.Clock;
 import java.time.Instant;
 import org.springframework.stereotype.Component;
 
-/** Adaptateur d'horloge. En test, il est remplace par une horloge fixe. */
+/** Adaptateur d'horloge. En test, il est remplacé par une horloge fixe. */
 @Component
 public class SystemTimeProvider implements TimeProvider {
 

@@ -28,7 +28,7 @@ class MessageTest {
     }
 
     @Test
-    @DisplayName("progresse de envoye a remis puis lu")
+    @DisplayName("progresse d'envoyé à remis puis lu")
     void progression() {
         Message message = unMessageDAlice();
 
@@ -40,7 +40,7 @@ class MessageTest {
     }
 
     @Test
-    @DisplayName("ne redescend jamais d'etat, quel que soit l'ordre d'arrivee des accuses")
+    @DisplayName("ne redescend jamais d'état, quel que soit l'ordre d'arrivée des accusés")
     void progressionMonotone() {
         Message message = unMessageDAlice();
 
@@ -67,7 +67,7 @@ class MessageTest {
     }
 
     @Test
-    @DisplayName("refuse un contenu au-dela de la limite")
+    @DisplayName("refuse un contenu au-delà de la limite")
     void contenuTropLong() {
         String trop = "a".repeat(MessageBody.MAX_LENGTH + 1);
 

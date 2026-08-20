@@ -5,11 +5,11 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 /**
- * Adaptateur de generation d'identifiants.
+ * Adaptateur de génération d'identifiants.
  *
- * <p>UUID aleatoire : l'identifiant ne revele ni volumetrie ni anteriorite, contrairement a une
- * sequence. Sur les tables a forte croissance, un identifiant ordonne dans le temps serait
- * preferable pour la localite d'index — point identifie, non traite dans la preuve de concept.
+ * <p>UUID aléatoire : l'identifiant ne révèle ni volumétrie ni antériorité, contrairement à une
+ * séquence. Sur les tables à forte croissance, un identifiant ordonne dans le temps serait
+ * préférable pour la localité d'index — point identifié, non traité dans la preuve de concept.
  */
 @Component
 public class UuidGenerator implements IdGenerator {

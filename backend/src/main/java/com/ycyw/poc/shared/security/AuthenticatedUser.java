@@ -7,10 +7,10 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.oauth2.jwt.Jwt;
 
 /**
- * Utilisateur authentifie, tel que les adaptateurs primaires le manipulent.
+ * Utilisateur authentifié, tel que les adaptateurs primaires le manipulent.
  *
- * <p>Le meme type sert au canal REST et au canal WebSocket : les deux points d'entree appliquent
- * ainsi exactement la meme lecture de l'identite, et un ecart entre les deux devient impossible.
+ * <p>Le même type sert au canal REST et au canal WebSocket : les deux points d'entrée appliquent
+ * ainsi exactement la même lecture de l'identité, et un écart entre les deux devient impossible.
  */
 public record AuthenticatedUser(UUID id, String displayName, UserRole role) {
 
@@ -21,7 +21,7 @@ public record AuthenticatedUser(UUID id, String displayName, UserRole role) {
                 UserRole.valueOf(jwt.getClaimAsString("role")));
     }
 
-    /** Lecture depuis le principal porte par la session WebSocket. */
+    /** Lecture depuis le principal porté par la session WebSocket. */
     public static AuthenticatedUser from(Principal principal) {
         if (principal instanceof AbstractAuthenticationToken token
                 && token.getPrincipal() instanceof Jwt jwt) {

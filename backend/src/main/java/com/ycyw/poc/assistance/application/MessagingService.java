@@ -22,10 +22,10 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Cas d'usage de l'echange lui-meme : envoi, accuse de reception, accuse de lecture (US-24).
+ * Cas d'usage de l'échange lui-même : envoi, accusé de réception, accusé de lecture (US-24).
  *
- * <p>Les champs declares ci-dessous sont les <b>ports</b> dont ce cas d'usage a besoin : deux
- * depots, un diffuseur, une horloge, un generateur d'identifiants. Le constructeur est genere a
+ * <p>Les champs declares ci-dessous sont les <b>ports</b> dont ce cas d'usage à besoin : deux
+ * dépôts, un diffuseur, une horloge, un générateur d'identifiants. Le constructeur est généré à
  * partir d'eux ; c'est la liste des champs qui fait foi.
  */
 @RequiredArgsConstructor
@@ -40,11 +40,11 @@ public class MessagingService {
     /**
      * Envoi d'un message.
      *
-     * <p><b>L'ordre des deux dernieres lignes est une decision d'architecture, pas un detail
-     * d'ecriture.</b> US-24 exige que « la conversation reprenne sans perte de message » apres une
-     * coupure : un message diffuse mais non enregistre disparaitrait a la reconnexion. La
-     * persistance fait donc autorite, le canal temps reel n'est qu'une livraison anticipee
-     * (proposition d'architecture, DA-11). Un test unitaire verifie explicitement cet ordre.
+     * <p><b>L'ordre des deux dernières lignes est une décision d'architecture, pas un détail
+     * d'écriture.</b> US-24 exige que « la conversation reprenne sans perte de message » après une
+     * coupure : un message diffusé mais non enregistré disparaîtrait à la reconnexion. La
+     * persistance fait donc autorité, le canal temps réel n'est qu'une livraison anticipée
+     * (proposition d'architecture, DA-11). Un test unitaire vérifie explicitement cet ordre.
      */
     public Message post(ConversationId conversationId, ParticipantId author, String rawBody) {
         Conversation conversation = load(conversationId);
@@ -60,7 +60,7 @@ public class MessagingService {
         return message;
     }
 
-    /** Le destinataire signale avoir recu le message : etat « remis » (US-24). */
+    /** Le destinataire signale avoir reçu le message : état « remis » (US-24). */
     public Optional<MessageDelivered> acknowledgeDelivery(
             ConversationId conversationId, MessageId messageId, ParticipantId recipient) {
         Conversation conversation = load(conversationId);
@@ -85,8 +85,8 @@ public class MessagingService {
     }
 
     /**
-     * Le destinataire a ouvert la conversation : tous les messages qui lui etaient adresses passent
-     * a l'etat « lu », et son marqueur de lecture avance (compteur de non-lus, US-24 / US-28).
+     * Le destinataire a ouvert la conversation : tous les messages qui lui étaient adresses passent
+     * à l'état « lu », et son marqueur de lecture avance (compteur de non-lus, US-24 / US-28).
      */
     public Optional<ConversationRead> markRead(ConversationId conversationId, ParticipantId reader) {
         Conversation conversation = load(conversationId);

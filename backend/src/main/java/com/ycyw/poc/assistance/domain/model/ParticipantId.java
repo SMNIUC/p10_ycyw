@@ -4,10 +4,10 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Identifiant d'un interlocuteur : un utilisateur et le role sous lequel il s'exprime.
+ * Identifiant d'un interlocuteur : un utilisateur et le rôle sous lequel il s'exprime.
  *
- * <p>Le contexte Assistance ne connait de l'Identite que cet identifiant. Il n'en importe aucune
- * classe : c'est ce qui rend la frontiere de DA-02 verifiable (voir les tests d'architecture).
+ * <p>Le contexte Assistance ne connaît de l'identité que cet identifiant. Il n'en importe aucune
+ * classe : c'est ce qui rend la frontière de DA-02 vérifiable (voir les tests d'architecture).
  */
 public record ParticipantId(UUID userId, ParticipantRole role) {
 

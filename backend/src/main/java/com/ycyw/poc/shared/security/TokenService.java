@@ -11,10 +11,10 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
 /**
- * Emission du jeton d'acces et du cookie qui le transporte (DA-18).
+ * Émission du jeton d'accès et du cookie qui le transporte (DA-18).
  *
  * <p>Le jeton n'est jamais remis au script de page : il part dans un cookie {@code HttpOnly}, ce
- * qui le rend illisible par une injection de script — contrairement a un stockage navigateur.
+ * qui le rend illisible par une injection de script — contrairement à un stockage navigateur.
  * {@code SameSite=Lax} limite son envoi depuis un site tiers.
  */
 @Service
@@ -39,8 +39,8 @@ public class TokenService {
                         .claim("role", user.role().name())
                         .claim("name", user.displayName())
                         .build();
-        // L'algorithme de signature doit etre declare explicitement : sans en-tete, l'encodeur
-        // choisit une signature asymetrique, incompatible avec le secret partage utilise ici.
+        // L'algorithme de signature doit être déclaré explicitement : sans en-tête, l'encodeur
+        // choisit une signature asymétrique, incompatible avec le secret partagé utilisé ici.
         JwsHeader entete = JwsHeader.with(MacAlgorithm.HS256).build();
         return encoder.encode(JwtEncoderParameters.from(entete, claims)).getTokenValue();
     }
@@ -49,7 +49,7 @@ public class TokenService {
         return baseCookie(token).maxAge(properties.tokenTtl()).build();
     }
 
-    /** Cookie vide et immediatement expire : la deconnexion ne laisse rien derriere elle. */
+    /** Cookie vide et immédiatement expire : la déconnexion ne laisse rien derrière elle. */
     public ResponseCookie expiredCookie() {
         return baseCookie("").maxAge(0).build();
     }

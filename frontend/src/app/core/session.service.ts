@@ -8,9 +8,9 @@ import { Session } from './models';
 /**
  * Session de l'utilisateur.
  *
- * <p>Le jeton n'apparait jamais ici : il vit dans un cookie inaccessible au script. L'application
- * cliente ne connait que l'identite affichable — nom et role — et n'a aucun moyen de divulguer le
- * jeton, meme si une injection de script parvenait a s'executer.
+ * <p>Le jeton n'apparaît jamais ici : il vit dans un cookie inaccessible au script. L'application
+ * cliente ne connaît que l'identité affichable — nom et rôle — et n'a aucun moyen de divulguer le
+ * jeton, même si une injection de script parvenait à s'executer.
  */
 @Injectable({ providedIn: 'root' })
 export class SessionService {
@@ -20,8 +20,8 @@ export class SessionService {
   readonly session = signal<Session | null>(null);
 
   /**
-   * Premier appel de l'application : il renseigne la session et provoque le depot du cookie
-   * portant le jeton anti-rejeu, sans lequel aucune ecriture ne serait acceptee ensuite.
+   * Premier appel de l'application : il renseigne la session et provoque le dépôt du cookie
+   * portant le jeton anti-rejeu, sans lequel aucune écriture ne serait acceptée ensuite.
    */
   amorcer(): Observable<Session> {
     return this.http

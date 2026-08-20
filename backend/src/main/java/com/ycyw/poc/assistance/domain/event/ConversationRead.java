@@ -6,7 +6,7 @@ import com.ycyw.poc.assistance.domain.model.ParticipantId;
 import java.time.Instant;
 import java.util.List;
 
-/** Le destinataire a ouvert la conversation : etat « lu » d'US-24 pour les messages concernes. */
+/** Le destinataire a ouvert la conversation : état « lu » d'US-24 pour les messages concernés. */
 public record ConversationRead(
         ConversationId conversationId,
         ParticipantId reader,

@@ -9,7 +9,7 @@
 # Correspondance avec la cible de production :
 #   web      -> reseau de diffusion de contenu + repartiteur de charge
 #   app-1/2  -> instances du service applicatif, mises a l'echelle horizontalement (ENF-19)
-#   postgres -> base de donnees geree, repliquee et sauvegardee (§ 12.2)
+#   postgres -> base de donnees geree, repliquee et sauvegardee (§ 13.2)
 #   rabbitmq -> broker compatible AMQP gere
 # ---------------------------------------------------------------------------------------------
 

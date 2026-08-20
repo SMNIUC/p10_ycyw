@@ -5,6 +5,8 @@ import com.ycyw.poc.assistance.domain.model.exception.ConversationClosedExceptio
 import com.ycyw.poc.assistance.domain.model.exception.ConversationNotFoundException;
 import com.ycyw.poc.assistance.domain.model.exception.NotAParticipantException;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,14 +14,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
- * Traduction des regles du domaine en reponses du protocole.
+ * Traduction des règles du domaine en réponses du protocole.
  *
- * <p>C'est ici, et seulement ici, que le vocabulaire HTTP rencontre le domaine : le domaine leve
- * « conversation deja prise en charge », l'adaptateur repond 409. L'inverse — un domaine qui
- * connaitrait les codes de statut — le rendrait dependant du canal qui l'appelle.
+ * <p>C'est ici, et seulement ici, que le vocabulaire HTTP rencontre le domaine : le domaine lève
+ * « conversation déjà prise en charge », l'adaptateur répond 409. L'inverse — un domaine qui
+ * connaîtrait les codes de statut — le rendrait dépendant du canal qui l'appelle.
  */
 @RestControllerAdvice(assignableTypes = ConversationController.class)
 class AssistanceExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(AssistanceExceptionHandler.class);
 
     @ExceptionHandler(ConversationNotFoundException.class)
     ResponseEntity<Map<String, String>> onNotFound(ConversationNotFoundException exception) {
@@ -27,8 +31,8 @@ class AssistanceExceptionHandler {
     }
 
     /**
-     * 403 et non 404 : la conversation existe, l'acces est refuse. La distinction reste sans risque
-     * ici, l'identifiant etant un UUID non devinable.
+     * 403 et non 404 : la conversation existe, l'accès est refusé. La distinction reste sans risque
+     * ici, l'identifiant étant un UUID non devinable.
      */
     @ExceptionHandler(NotAParticipantException.class)
     ResponseEntity<Map<String, String>> onForbidden(NotAParticipantException exception) {
@@ -47,16 +51,22 @@ class AssistanceExceptionHandler {
     }
 
     /**
-     * Le verrou optimiste a joue : deux agents ont pris la meme demande au meme instant. Du point de
-     * vue de l'appelant, c'est le meme refus que ci-dessus.
+     * Le verrou optimiste a joué : deux agents ont pris la même demande au même instant. Du point de
+     * vue de l'appelant, c'est le même refus que ci-dessus.
+     *
+     * <p><b>Le message de l'exception est tracé, jamais renvoyé.</b> Celui que produit le
+     * gestionnaire de persistance nomme l'entité et la version attendue : c'est ce qu'il faut pour
+     * diagnostiquer une contention, et exactement ce qu'il ne faut pas exposer à un client. La
+     * réponse porte donc un texte fixe, la trace porte le détail.
      */
     @ExceptionHandler(OptimisticLockingFailureException.class)
     ResponseEntity<Map<String, String>> onConcurrentWrite(
             OptimisticLockingFailureException exception) {
+        log.info("Écriture concurrente refusée par le verrou optimiste : {}", exception.getMessage());
         return problem(
                 HttpStatus.CONFLICT,
                 "CONCURRENT_UPDATE",
-                "La conversation a ete modifiee par ailleurs. Rechargez la file d'attente.");
+                "La conversation a été modifiée par ailleurs. Rechargez la file d'attente.");
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

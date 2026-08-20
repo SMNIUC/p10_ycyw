@@ -14,15 +14,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * Compte persiste, dans le schema {@code identity}.
+ * Compte persisté, dans le schéma {@code identity}.
  *
- * <p>Le mot de passe n'est jamais stocke : seule son empreinte l'est, produite par BCrypt avec un
- * cout de 12. L'audit releve que la plateforme europeenne historique utilise encore SHA-1 (F-11) ;
- * la preuve de concept met en oeuvre la correction, elle ne se contente pas de la recommander.
+ * <p>Le mot de passe n'est jamais stocké : seule son empreinte l'est, produite par <b>Argon2id</b>
+ * (DA-17). L'audit relève que la plateforme européenne historique utilise encore SHA-1 (C-11) ;
+ * la preuve de concept met en œuvre la correction décidée, elle ne se contente pas de la
+ * recommander.
  *
- * <p><b>Aucun accesseur en ecriture</b> : un compte se cree entier, par le constructeur. La preuve
- * de concept ne modifie jamais un compte existant, et le jour ou elle le fera, ce sera par une
- * methode nommee — pas par une suite d'affectations.
+ * <p><b>Aucun accesseur en écriture</b> : un compte se crée entier, par le constructeur. La preuve
+ * de concept ne modifie jamais un compte existant, et le jour où elle le fera, ce sera par une
+ * méthode nommée — pas par une suite d'affectations.
  */
 @Entity
 @Table(name = "app_user", schema = "identity")
@@ -34,7 +35,7 @@ public class AppUserEntity {
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @Column(name = "email", nullable = false, unique = true, length = 255)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "display_name", nullable = false, length = 120)
@@ -51,11 +52,11 @@ public class AppUserEntity {
     private Instant createdAt;
 
     /**
-     * Constructeur ecrit a la main, volontairement.
+     * Constructeur écrit à la main, volontairement.
      *
-     * <p>Un constructeur genere se contenterait de reprendre l'ordre des champs — or trois d'entre
-     * eux sont des chaines consecutives. Le jour ou quelqu'un reordonnerait les declarations,
-     * l'empreinte du mot de passe se retrouverait enregistree dans la colonne du courriel, sans la
+     * <p>Un constructeur généré se contenterait de reprendre l'ordre des champs — or trois d'entre
+     * eux sont des chaînes consécutives. Le jour où quelqu'un réordonnerait les declarations,
+     * l'empreinte du mot de passe se retrouverait enregistrée dans la colonne du courriel, sans la
      * moindre erreur de compilation. Le gain de six lignes ne vaut pas ce risque.
      */
     AppUserEntity(

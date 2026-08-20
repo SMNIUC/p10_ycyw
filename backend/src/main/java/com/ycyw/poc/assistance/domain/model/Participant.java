@@ -4,11 +4,11 @@ import java.time.Instant;
 import java.util.Objects;
 
 /**
- * Presence d'un utilisateur dans une conversation, et date jusqu'a laquelle il a lu.
+ * Présence d'un utilisateur dans une conversation, et date jusqu'à laquelle il a lu.
  *
- * <p>Entite interne a l'agregat Conversation : elle ne se modifie qu'a travers la racine. Le
+ * <p>Entité interne à l'agrégat Conversation : elle ne se modifie qu'à travers la racine. Le
  * marqueur de lecture porte le compteur de messages non lus attendu par US-24 et US-28 sans avoir
- * a stocker un etat par couple message/lecteur.
+ * à stocker un état par couple message/lecteur.
  */
 public final class Participant {
 
@@ -26,7 +26,7 @@ public final class Participant {
         return new Participant(id, joinedAt, null);
     }
 
-    /** Reconstruction depuis la persistance. Reserve a l'adaptateur secondaire. */
+    /** Reconstruction depuis la persistance. Réservé à l'adaptateur secondaire. */
     public static Participant rehydrate(ParticipantId id, Instant joinedAt, Instant lastReadAt) {
         return new Participant(id, joinedAt, lastReadAt);
     }

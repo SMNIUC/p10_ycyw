@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-/** Depot de messages en memoire. */
+/** Dépôt de messages en mémoire. */
 public class InMemoryMessageRepository implements MessageRepository {
 
     private final Map<MessageId, Message> store = new LinkedHashMap<>();

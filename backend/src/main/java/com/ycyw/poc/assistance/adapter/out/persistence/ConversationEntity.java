@@ -21,16 +21,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Representation persistante de la conversation.
+ * Représentation persistante de la conversation.
  *
- * <p>Deliberement distincte de l'agregat du domaine : c'est ce qui permet a Conversation de ne
- * porter aucune annotation de framework (DA-05), regle verifiee au build.
+ * <p>Délibérément distincte de l'agrégat du domaine : c'est ce qui permet à Conversation de ne
+ * porter aucune annotation de framework (DA-05), règle vérifiée au build.
  *
- * <p>Le schema {@code assistance} materialise la frontiere de module : aucune table d'un autre
- * contexte n'est referencee ici, pas meme l'utilisateur — d'ou {@code customer_id} en UUID nu,
- * sans cle etrangere vers le schema {@code identity}.
+ * <p>Le schéma {@code assistance} matérialise la frontière de module : aucune table d'un autre
+ * contexte n'est référencée ici, pas même l'utilisateur — d'où {@code customer_id} en UUID nu,
+ * sans clé étrangère vers le schéma {@code identity}.
  *
- * <p>Les accesseurs sont generes en portee <b>paquet</b> : ils n'existent que pour le mappeur, et
+ * <p>Les accesseurs sont générés en portée <b>paquet</b> : ils n'existent que pour le mappeur, et
  * ne fuient pas hors de l'adaptateur de persistance.
  */
 @Entity
@@ -67,11 +67,11 @@ public class ConversationEntity {
     private Instant closedAt;
 
     /**
-     * Verrou optimiste. Deux agents peuvent cliquer sur la meme demande depuis deux instances : la
-     * seconde ecriture echoue, et l'adaptateur primaire la traduit en refus explicite (US-26).
+     * Verrou optimiste. Deux agents peuvent cliquer sur la même demande depuis deux instances : la
+     * seconde écriture échoué, et l'adaptateur primaire la traduit en refus explicite (US-26).
      *
      * <p>Sans accesseur : ce champ appartient au gestionnaire de persistance, aucun code applicatif
-     * n'a de raison de le lire ni de l'ecrire.
+     * n'a de raison de le lire ni de l'écrire.
      */
     @Version
     @Column(name = "version", nullable = false)
@@ -80,7 +80,7 @@ public class ConversationEntity {
     private long version;
 
     /**
-     * La collection se modifie, elle ne se remplace pas : un accesseur en ecriture substituerait
+     * La collection se modifie, elle ne se remplace pas : un accesseur en écriture substituerait
      * l'instance suivie par le gestionnaire de persistance, et la suppression des orphelins
      * cesserait de fonctionner.
      */

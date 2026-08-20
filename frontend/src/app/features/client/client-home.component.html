@@ -35,7 +35,7 @@
           <p class="discret">
             Ouverte le {{ conversation.openedAt | date: 'medium' }} —
             {{ libelleStatut(conversation) }}
-            <!-- Le compteur de non-lus vient du serveur : il est calcule a partir du marqueur de
+            <!-- Le compteur de non-lus vient du serveur : il est calculé à partir du marqueur de
                  lecture, jamais devine cote navigateur. -->
             @if (conversation.unreadCount > 0) {
               —

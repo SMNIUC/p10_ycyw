@@ -4,7 +4,7 @@ import com.ycyw.poc.assistance.domain.port.IdGenerator;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
-/** Identifiants previsibles, pour que l'echec d'un test soit lisible. */
+/** Identifiants prévisibles, pour que l'échec d'un test soit lisible. */
 public class SequentialIdGenerator implements IdGenerator {
 
     private final AtomicLong counter = new AtomicLong();

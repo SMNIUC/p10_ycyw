@@ -67,9 +67,9 @@ class MessagingServiceTest {
     @Test
     @DisplayName("persiste le message AVANT de le diffuser — condition de la reprise d'US-24")
     void persisteAvantDeDiffuser() {
-        // Ce test est le seul de la suite a utiliser des doublures verifiables plutot que des
-        // depots en memoire : ce qu'il controle n'est pas un resultat, c'est un ORDRE. Un message
-        // diffuse mais non enregistre disparaitrait a la reconnexion du client — la conversation
+        // Ce test est le seul de la suite à utiliser des doublures vérifiables plutôt que des
+        // dépôts en mémoire : ce qu'il contrôle n'est pas un résultat, c'est un ORDRE. Un message
+        // diffusé mais non enregistré disparaîtrait à la reconnexion du client — la conversation
         // ne reprendrait donc pas « sans perte de message ».
         ConversationRepository conversationsMock = mock(ConversationRepository.class);
         MessageRepository messagesMock = mock(MessageRepository.class);
@@ -91,7 +91,7 @@ class MessagingServiceTest {
     }
 
     @Test
-    @DisplayName("enregistre le message a l'etat « envoye » et le diffuse")
+    @DisplayName("enregistre le message à l'état « envoyé » et le diffuse")
     void envoi() {
         Message message = service.post(conversation.id(), ALICE, "Bonjour, je dois decaler.");
 
@@ -103,7 +103,7 @@ class MessagingServiceTest {
     }
 
     @Test
-    @DisplayName("refuse un message d'un tiers a la conversation")
+    @DisplayName("refuse un message d'un tiers à la conversation")
     void tiersRefuse() {
         ParticipantId intrus = ParticipantId.customer(UUID.randomUUID());
 
@@ -115,7 +115,7 @@ class MessagingServiceTest {
     }
 
     @Test
-    @DisplayName("l'accuse de reception fait passer le message a « remis »")
+    @DisplayName("l'accusé de réception fait passer le message à « remis »")
     void accuseDeReception() {
         Message message = service.post(conversation.id(), ALICE, "Bonjour");
 
@@ -126,7 +126,7 @@ class MessagingServiceTest {
     }
 
     @Test
-    @DisplayName("l'auteur ne peut pas accuser reception de son propre message")
+    @DisplayName("l'auteur ne peut pas accuser réception de son propre message")
     void accuseDeReceptionParLAuteur() {
         Message message = service.post(conversation.id(), ALICE, "Bonjour");
 
@@ -136,7 +136,7 @@ class MessagingServiceTest {
     }
 
     @Test
-    @DisplayName("la lecture fait passer a « lu » les seuls messages recus, et avance le marqueur")
+    @DisplayName("la lecture fait passer à « lu » les seuls messages reçus, et avance le marqueur")
     void lecture() {
         Message dAlice = service.post(conversation.id(), ALICE, "Bonjour");
         time.advance(Duration.ofSeconds(30));
@@ -162,7 +162,7 @@ class MessagingServiceTest {
     }
 
     @Test
-    @DisplayName("ne diffuse aucun accuse de lecture s'il n'y avait rien a lire")
+    @DisplayName("ne diffuse aucun accusé de lecture s'il n'y avait rien à lire")
     void lectureSansNouveaute() {
         assertThat(service.markRead(conversation.id(), SAM)).isEmpty();
         assertThat(publisher.publishedOfType(ConversationRead.class)).isEmpty();

@@ -18,9 +18,9 @@ public interface MessageRepository {
     List<Message> findByConversation(ConversationId conversationId);
 
     /**
-     * Messages recus par un participant et pas encore lus.
+     * Messages reçus par un participant et pas encore lus.
      *
-     * <p>Sert deux usages : le compteur de non-lus (US-28) et le passage a l'etat « lu » quand la
+     * <p>Sert deux usages : le compteur de non-lus (US-28) et le passage à l'état « lu » quand la
      * conversation est ouverte (US-24).
      */
     List<Message> findUnreadFor(ConversationId conversationId, ParticipantId recipient);

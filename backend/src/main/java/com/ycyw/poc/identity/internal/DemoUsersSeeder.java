@@ -14,12 +14,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Jeu de comptes de demonstration, cree au demarrage du profil {@code demo} uniquement.
+ * Jeu de comptes de démonstration, créé au démarrage du profil {@code demo} uniquement.
  *
- * <p>Deux precautions volontaires. Les identites sont <b>fictives</b> et le domaine
- * {@code example.test} est reserve a cet usage : aucune donnee personnelle reelle ne circule dans
- * un environnement non productif (§ 12.4 de la proposition d'architecture). Le mot de passe est lu
- * dans la configuration et n'a pas de valeur par defaut en dur : hors profil {@code demo}, ce code
+ * <p>Deux précautions volontaires. Les identités sont <b>fictives</b> et le domaine
+ * {@code example.test} est réservé à cet usage : aucune donnée personnelle réelle ne circule dans
+ * un environnement non productif (§ 13.5 de la proposition d'architecture). Le mot de passe est lu
+ * dans la configuration et n'a pas de valeur par défaut en dur : hors profil {@code demo}, ce code
  * n'existe pas dans le contexte applicatif.
  */
 @Component
@@ -61,6 +61,6 @@ public class DemoUsersSeeder implements ApplicationRunner {
                         passwordEncoder.encode(demoPassword),
                         role,
                         Instant.now()));
-        log.info("Compte de demonstration cree : {} ({})", email, role);
+        log.info("Compte de démonstration créé : {} ({})", email, role);
     }
 }

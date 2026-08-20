@@ -6,12 +6,12 @@ import com.ycyw.poc.identity.UserRole;
 import com.ycyw.poc.shared.security.AuthenticatedUser;
 
 /**
- * Traduction de l'utilisateur authentifie en participant du contexte Assistance.
+ * Traduction de l'utilisateur authentifié en participant du contexte Assistance.
  *
- * <p>C'est la frontiere entre deux contextes bornes, et le seul endroit du module ou le vocabulaire
- * de l'Identite est cite. Les deux enumerations coincident aujourd'hui ; la traduction reste
- * explicite pour que l'ajout d'un role cote Identite — superviseur, administrateur — soit un choix
- * conscient plutot qu'une propagation automatique.
+ * <p>C'est la frontière entre deux contextes bornés, et le seul endroit du module ou le vocabulaire
+ * de l'identité est cité. Les deux énumérations coïncident aujourd'hui ; la traduction reste
+ * explicite pour que l'ajout d'un rôle côté Identité — superviseur, administrateur — soit un choix
+ * conscient plutôt qu'une propagation automatique.
  */
 public final class IdentityTranslation {
 

@@ -12,10 +12,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Depot en memoire.
+ * Dépôt en mémoire.
  *
- * <p>Il tient en trente lignes parce que le port est exprime en termes du domaine. C'est le
- * benefice concret de DA-06 : les cas d'usage se testent sans base de donnees, donc sans conteneur,
+ * <p>Il tient en trente lignes parce que le port est exprimé en termes du domaine. C'est le
+ * bénéfice concret de DA-06 : les cas d'usage se testent sans base de données, donc sans conteneur,
  * donc en quelques millisecondes.
  */
 public class InMemoryConversationRepository implements ConversationRepository {

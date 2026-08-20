@@ -10,12 +10,12 @@ import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler
 import org.springframework.util.StringUtils;
 
 /**
- * Traitement du jeton anti-rejeu adapte a une application monopage.
+ * Traitement du jeton anti-rejeu adapté à une application monopage.
  *
- * <p>Le jeton est depose dans un cookie lisible par le script, que le client renvoie en en-tete a
- * chaque ecriture. Le masquage par « ou exclusif » protege le jeton de la compression de reponse
- * (attaque BREACH) ; lorsque le client presente le jeton en en-tete, la valeur brute est comparee
- * telle quelle. C'est la recette documentee par le framework de securite.
+ * <p>Le jeton est déposé dans un cookie lisible par le script, que le client renvoie en en-tête à
+ * chaque écriture. Le masquage par « ou exclusif » protege le jeton de la compression de réponse
+ * (attaque BREACH) ; lorsque le client présente le jeton en en-tête, la valeur brute est comparée
+ * telle quelle. C'est la recette documentée par le framework de sécurité.
  */
 final class SpaCsrfTokenRequestHandler extends CsrfTokenRequestAttributeHandler {
 

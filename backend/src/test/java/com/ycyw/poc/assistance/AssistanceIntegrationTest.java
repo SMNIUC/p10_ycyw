@@ -37,10 +37,10 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 /**
  * Parcours complet sur un vrai PostgreSQL.
  *
- * <p>Ce test verifie ce que les tests unitaires ne peuvent pas verifier : que les migrations
- * s'appliquent, que le mappage vers les schemas cloisonnes fonctionne, que la chaine de securite
- * laisse passer la session legitime et refuse les autres. C'est la mise en oeuvre reelle de la
- * structure de donnees, pas seulement sa modelisation.
+ * <p>Ce test vérifie ce que les tests unitaires ne peuvent pas vérifier : que les migrations
+ * s'appliquent, que le mappage vers les schémas cloisonnes fonctionne, que la chaîne de sécurité
+ * laisse passer la session légitime et refuse les autres. C'est la mise en œuvre réelle de la
+ * structure de données, pas seulement sa modélisation.
  *
  * <p>Il exige un moteur de conteneurs local. Pour l'exclure de la boucle rapide :
  * {@code mvn test -DexcludedGroups=docker}.
@@ -76,7 +76,7 @@ class AssistanceIntegrationTest {
     @Autowired private MessageRepository messages;
 
     @Test
-    @DisplayName("le client ouvre une demande, l'agent la prend en charge, l'echange est persiste")
+    @DisplayName("le client ouvre une demande, l'agent la prend en charge, l'échange est persisté")
     void parcoursNominal() throws Exception {
         Cookie sessionClient = seConnecter("alice.client@example.test");
         Cookie sessionAgent = seConnecter("sam.agent@example.test");
@@ -97,9 +97,9 @@ class AssistanceIntegrationTest {
                                 .andReturn(),
                         "id");
 
-        // La demande apparait dans la file des agents, avec son temps d'attente (US-26).
-        // Le filtre sur l'identifiant plutot que sur le premier element rend le test independant
-        // des demandes laissees par les autres cas : ils partagent la meme base.
+        // La demande apparaît dans la file des agents, avec son temps d'attente (US-26).
+        // Le filtre sur l'identifiant plutôt que sur le premier élément rend le test indépendant
+        // des demandes laissées par les autres cas : ils partagent la même base.
         mockMvc.perform(get("/api/agent/queue").cookie(sessionAgent))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath(demandeEnFile(conversationId) + ".waitingSeconds").isNotEmpty());
@@ -111,7 +111,7 @@ class AssistanceIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("TAKEN"));
 
-        // Une demande prise en charge n'est plus proposee aux autres agents (US-26).
+        // Une demande prise en charge n'est plus proposée aux autres agents (US-26).
         mockMvc.perform(get("/api/agent/queue").cookie(sessionAgent))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath(demandeEnFile(conversationId)).isEmpty());
@@ -124,14 +124,14 @@ class AssistanceIntegrationTest {
                 messaging.post(
                         identifiantConversation,
                         ParticipantId.customer(clientId),
-                        "Bonjour, je dois decaler ma location de deux jours.");
+                        "Bonjour, je dois décaler ma location de deux jours.");
         Message deLAgent =
                 messaging.post(
                         identifiantConversation,
                         ParticipantId.agent(agentId),
                         "Bonjour, je regarde votre dossier.");
 
-        // L'historique persiste fait autorite : c'est lui que le client recharge apres une coupure.
+        // L'historique persisté fait autorité : c'est lui que le client recharge après une coupure.
         mockMvc.perform(
                         get("/api/conversations/" + conversationId + "/messages")
                                 .cookie(sessionClient))
@@ -141,7 +141,7 @@ class AssistanceIntegrationTest {
                 .andExpect(jsonPath("$[1].id").value(deLAgent.id().toString()))
                 .andExpect(jsonPath("$[0].state").value("SENT"));
 
-        // L'agent lit la conversation : seuls les messages qui lui etaient adresses passent a « lu ».
+        // L'agent lit la conversation : seuls les messages qui lui étaient adresses passent à « lu ».
         messaging.markRead(identifiantConversation, ParticipantId.agent(agentId));
 
         List<Message> relus = messages.findByConversation(identifiantConversation);
@@ -177,13 +177,13 @@ class AssistanceIntegrationTest {
     }
 
     @Test
-    @DisplayName("sans session, l'acces est refuse")
+    @DisplayName("sans session, l'accès est refusé")
     void sansSession() throws Exception {
         mockMvc.perform(get("/api/conversations")).andExpect(status().isUnauthorized());
     }
 
     @Test
-    @DisplayName("la file d'attente est reservee aux agents")
+    @DisplayName("la file d'attente est réservée aux agents")
     void fileReserveeAuxAgents() throws Exception {
         mockMvc.perform(get("/api/agent/queue").cookie(seConnecter("alice.client@example.test")))
                 .andExpect(status().isForbidden());
@@ -198,7 +198,7 @@ class AssistanceIntegrationTest {
         assertThat(session.getValue()).isNotBlank();
     }
 
-    /** Selecteur de la demande consideree dans la file, quelles que soient les autres. */
+    /** Sélecteur de la demande considérée dans la file, quelles que soient les autres. */
     private static String demandeEnFile(String conversationId) {
         return "$[?(@.id=='" + conversationId + "')]";
     }

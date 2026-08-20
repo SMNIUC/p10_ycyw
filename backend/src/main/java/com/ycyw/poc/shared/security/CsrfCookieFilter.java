@@ -9,11 +9,11 @@ import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
- * Force la materialisation du jeton anti-rejeu, donc l'emission de son cookie.
+ * Force la matérialisation du jeton anti-rejeu, donc l'émission de son cookie.
  *
- * <p>Sans cet appel, le jeton n'est calcule que lorsqu'une ecriture le reclame — et le client n'a
- * alors jamais recu le cookie qui lui permettrait de la faire aboutir. Un appel de lecture au
- * demarrage de l'application cliente suffit ainsi a l'amorcer.
+ * <p>Sans cet appel, le jeton n'est calculé que lorsqu'une écriture le réclame — et le client n'a
+ * alors jamais reçu le cookie qui lui permettrait de la faire aboutir. Un appel de lecture au
+ * démarrage de l'application cliente suffit ainsi à l'amorcer.
  */
 final class CsrfCookieFilter extends OncePerRequestFilter {
 

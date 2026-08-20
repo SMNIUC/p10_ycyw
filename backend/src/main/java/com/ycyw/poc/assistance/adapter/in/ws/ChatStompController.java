@@ -19,17 +19,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Adaptateur primaire temps reel.
+ * Adaptateur primaire temps réel.
  *
- * <p>Il ne contient aucune regle : il lit l'identite de la session, traduit la trame en appel de
+ * <p>Il ne contient aucune règle : il lit l'identité de la session, traduit la trame en appel de
  * cas d'usage, et laisse le service applicatif persister puis diffuser. C'est ce qui permet aux
- * memes cas d'usage d'etre appeles demain par un autre point d'entree — l'API des applications
- * d'agence, par exemple — sans dupliquer une seule regle.
+ * mêmes cas d'usage d'être appelés demain par un autre point d'entrée — l'API des applications
+ * d'agence, par exemple — sans dupliquer une seule règle.
  *
- * <p><b>La transaction est ouverte ici</b>, a la frontiere : les services applicatifs sont des
- * objets sans annotation de framework (DA-05), ils ne peuvent donc pas la porter eux-memes. C'est
- * le compromis assume de cette architecture, et il place la limite transactionnelle exactement la
- * ou commence le cas d'usage.
+ * <p><b>La transaction est ouverte ici</b>, à la frontière : les services applicatifs sont des
+ * objets sans annotation de framework (DA-05), ils ne peuvent donc pas la porter eux-mêmes. C'est
+ * le compromis assumé de cette architecture, et il place la limite transactionnelle exactement la
+ * où commence le cas d'usage.
  */
 @Controller
 public class ChatStompController {
@@ -53,7 +53,7 @@ public class ChatStompController {
         messaging.post(ConversationId.of(conversationId), author, command.body());
     }
 
-    /** Accuse de reception : le destinataire a recu la trame (etat « remis », US-24). */
+    /** Accusé de réception : le destinataire a reçu la trame (état « remis », US-24). */
     @MessageMapping("/conversations/{conversationId}/delivered")
     @Transactional
     public void acknowledgeDelivery(
@@ -66,7 +66,7 @@ public class ChatStompController {
                 author(principal));
     }
 
-    /** Accuse de lecture : la conversation est ouverte a l'ecran (etat « lu », US-24). */
+    /** Accusé de lecture : la conversation est ouverte à l'écran (état « lu », US-24). */
     @MessageMapping("/conversations/{conversationId}/read")
     @Transactional
     public void markRead(@DestinationVariable String conversationId, Principal principal) {
@@ -74,13 +74,13 @@ public class ChatStompController {
     }
 
     /**
-     * Une regle du domaine violee revient a son emetteur sur sa destination privee, sans interrompre
+     * Une règle du domaine violée revient à son émetteur sur sa destination privée, sans interrompre
      * la connexion ni affecter l'autre participant.
      */
     @MessageExceptionHandler(DomainRuleViolation.class)
     @SendToUser("/queue/errors")
     public ChatErrorPayload onDomainRuleViolation(DomainRuleViolation exception) {
-        log.info("Regle du domaine refusee sur le canal temps reel : {}", exception.getMessage());
+        log.info("Règle du domaine refusée sur le canal temps réel : {}", exception.getMessage());
         return new ChatErrorPayload("DOMAIN_RULE", exception.getMessage());
     }
 

@@ -4,11 +4,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * Point d'entree de la preuve de concept.
+ * Point d'entrée de la preuve de concept.
  *
- * <p>Le deployable ne contient qu'un seul contexte borne — Assistance (DA-02) — plus le strict
- * necessaire d'Identite pour authentifier les deux profils qui dialoguent. Les autres contextes
- * sont concus et documentes dans la proposition d'architecture, jamais implementes ici.
+ * <p>Le déployable ne contient qu'un seul contexte borné — Assistance (DA-02) — plus le strict
+ * nécessaire d'identité pour authentifier les deux profils qui dialoguent. Les autres contextes
+ * sont conçus et documentés dans la proposition d'architecture, jamais implémentés ici.
  */
 @SpringBootApplication
 public class PocApplication {

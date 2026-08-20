@@ -9,13 +9,24 @@ import java.util.Optional;
 import java.util.UUID;
 import org.springframework.stereotype.Repository;
 
-/** Adaptateur secondaire : implemente le port de persistance declare par le domaine. */
+/**
+ * Adaptateur secondaire : implémente le port de persistance déclaré par le domaine.
+ *
+ * <p><b>Visibilité paquet, comme le dépôt Spring Data qu'il enveloppe.</b> Seul le port
+ * {@code ConversationRepository} est un contrat ; cet adaptateur en est une mise en œuvre, que rien
+ * n'a de raison de nommer depuis l'extérieur. Spring le découvre par balayage de composants et
+ * l'injecte sous le type du port.
+ */
 @Repository
-public class JpaConversationRepository implements ConversationRepository {
+class JpaConversationRepository implements ConversationRepository {
 
     private final ConversationJpaRepository jpa;
 
-    public JpaConversationRepository(ConversationJpaRepository jpa) {
+    // Visibilité paquet, et non publique : {@code ConversationJpaRepository} est interne à
+    // l'adaptateur, un constructeur public l'exposerait donc dans une signature que personne, hors
+    // du paquet, ne pourrait satisfaire. Rien n'instancie cet adaptateur à la main : le domaine ne
+    // connaît que le port, et Spring câble le reste.
+    JpaConversationRepository(ConversationJpaRepository jpa) {
         this.jpa = jpa;
     }
 

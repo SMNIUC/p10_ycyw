@@ -5,7 +5,7 @@ import com.ycyw.poc.assistance.domain.port.ChatEventPublisher;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Diffuseur d'evenements qui se contente de les retenir, pour que le test les examine. */
+/** Diffuseur d'événements qui se contente de les retenir, pour que le test les examine. */
 public class RecordingChatEventPublisher implements ChatEventPublisher {
 
     private final List<ChatEvent> published = new ArrayList<>();

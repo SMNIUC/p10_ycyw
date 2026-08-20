@@ -16,8 +16,8 @@ poc:
     cookie-path: /
     cookie-secure: false
   broker:
-    # Broker en memoire : les tests d'integration verifient la persistance et les regles, pas la
-    # diffusion entre instances — celle-ci se demontre avec docker compose.
+    # Broker en mémoire : les tests d'intégration vérifient la persistance et les règles, pas la
+    # diffusion entre instances — celle-ci se démontre avec docker compose.
     relay-enabled: false
   demo:
     password: motdepasse-de-test

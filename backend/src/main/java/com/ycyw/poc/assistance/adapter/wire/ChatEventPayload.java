@@ -13,10 +13,10 @@ import java.time.Instant;
 import java.util.List;
 
 /**
- * Trame diffusee sur le canal temps reel.
+ * Trame diffusée sur le canal temps réel.
  *
- * <p>C'est la traduction de l'evenement de domaine en format de transport : le domaine ignore
- * qu'elle existe. Le champ {@code type} permet au client de discriminer sans deviner d'apres la
+ * <p>C'est la traduction de l'événement de domaine en format de transport : le domaine ignore
+ * qu'elle existe. Le champ {@code type} permet au client de discriminer sans deviner d'après la
  * forme du contenu.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -32,7 +32,14 @@ public record ChatEventPayload(
         String status,
         String subject) {
 
-    public static ChatEventPayload from(ChatEvent event, Instant occurredAt) {
+    /**
+     * <b>L'horodatage vient de l'événement, jamais de l'adaptateur.</b> Chaque branche lit l'instant
+     * porté par le domaine — lui-même obtenu par le port d'horloge (DA-06). Prendre ici l'heure
+     * courante ferait diverger la trame temps réel de ce qui est persisté : le client verrait deux
+     * dates différentes pour un même message selon qu'il le reçoit en direct ou qu'il recharge son
+     * historique.
+     */
+    public static ChatEventPayload from(ChatEvent event) {
         return switch (event) {
             case MessagePosted posted ->
                     new ChatEventPayload(

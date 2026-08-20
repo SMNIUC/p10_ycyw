@@ -1,11 +1,11 @@
 package com.ycyw.poc.assistance.domain.model;
 
 /**
- * Etat d'acheminement d'un message, exige par US-24 : « son etat — envoye, remis, lu — m'est
+ * État d'acheminement d'un message, exige par US-24 : « son état — envoyé, remis, lu — m'est
  * indique ».
  *
- * <p>La progression est monotone : un message remis ne redevient jamais simplement envoye. C'est
- * cette regle qui protege l'affichage d'un ordre d'arrivee reseau imprevisible.
+ * <p>La progression est monotone : un message remis ne redevient jamais simplement envoyé. C'est
+ * cette règle qui protege l'affichage d'un ordre d'arrivée réseau imprévisible.
  */
 public enum DeliveryState {
     SENT(0),
@@ -18,7 +18,7 @@ public enum DeliveryState {
         this.rank = rank;
     }
 
-    /** Vrai si {@code target} represente une progression de l'acheminement. */
+    /** Vrai si {@code target} représente une progression de l'acheminement. */
     public boolean precedes(DeliveryState target) {
         return this.rank < target.rank;
     }

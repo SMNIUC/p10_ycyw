@@ -11,10 +11,10 @@ registerLocaleData(localeFr);
 /**
  * Configuration de l'application cliente.
  *
- * Le jeton anti-rejeu est lu dans le cookie depose par le serveur et renvoye en en-tete a chaque
- * ecriture. C'est la contrepartie necessaire de l'authentification par cookie : le jeton de session
- * etant inaccessible au script, il part automatiquement avec chaque requete — y compris celles
- * qu'un site tiers declencherait. Le jeton anti-rejeu, lui, ne peut etre pose que par du code de
+ * Le jeton anti-rejeu est lu dans le cookie déposé par le serveur et renvoyé en en-tête à chaque
+ * écriture. C'est la contrepartie nécessaire de l'authentification par cookie : le jeton de session
+ * étant inaccessible au script, il part automatiquement avec chaque requête — y compris celles
+ * qu'un site tiers déclencherait. Le jeton anti-rejeu, lui, ne peut être pose que par du code de
  * cette application.
  */
 export const appConfig: ApplicationConfig = {

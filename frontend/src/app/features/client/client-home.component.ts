@@ -7,11 +7,11 @@ import { AssistanceApiService } from '../../core/assistance-api.service';
 import { LIBELLE_ETAT_CONVERSATION, ResumeConversation } from '../../core/models';
 
 /**
- * Espace client : ouvrir une demande (US-23) et retrouver ses echanges (US-25).
+ * Espace client : ouvrir une demande (US-23) et retrouver ses échanges (US-25).
  *
- * <p>Le compteur de messages non lus repond au critere d'US-28 : « quand un agent repond alors que
- * j'ai quitte la page, alors j'en suis informe a mon retour ». Il est calcule cote serveur a partir
- * du marqueur de lecture, et non devine cote navigateur.
+ * <p>Le compteur de messages non lus répond au critère d'US-28 : « quand un agent répond alors que
+ * j'ai quitte la page, alors j'en suis informé à mon retour ». Il est calculé côté serveur à partir
+ * du marqueur de lecture, et non devine côté navigateur.
  */
 @Component({
   selector: 'app-client-home',

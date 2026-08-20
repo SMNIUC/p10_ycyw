@@ -1,29 +1,30 @@
 -- ---------------------------------------------------------------------------------------------
--- Structure de donnees de la preuve de concept.
+-- Structure de données de la preuve de concept.
 --
--- Deux schemas, un par contexte borne (proposition d'architecture, § 6.1) : le cloisonnement par
--- schema materialise la frontiere de modules et permet de la verifier. Une seule base, conformement
--- a CT-02 qui exige un modele unique et partage.
+-- Deux schémas, un par contexte borné (proposition d'architecture, § 7.1) : le cloisonnement par
+-- schéma matérialise la frontière de modules et permet de la vérifier. Une seule base, conformément
+-- à CT-02 qui exige un modèle unique et partage.
 --
--- Point volontaire : aucune cle etrangere ne relie assistance.conversation a identity.app_user.
--- Une conversation reference un utilisateur par son identifiant, sans dependance de schema. C'est
--- ce qui rend le module Assistance extractible sans refonte (§ 3.6) et ce qui permettra
--- l'anonymisation d'un compte sans casser l'historique des echanges (RG-13, § 6.7).
+-- Point volontaire : aucune clé étrangère ne relie assistance.conversation à identity.app_user.
+-- Une conversation référence un utilisateur par son identifiant, sans dépendance de schéma. C'est
+-- ce qui rend le module Assistance extractible sans refonte (§ 4.6) et ce qui permettra
+-- l'anonymisation d'un compte sans casser l'historique des échanges (RG-13, § 7.7).
 -- ---------------------------------------------------------------------------------------------
 
 create schema if not exists identity;
 create schema if not exists assistance;
 
 -- --------------------------------------------------------------------------------------------
--- Contexte Identite
+-- Contexte Identité
 -- --------------------------------------------------------------------------------------------
 
 create table identity.app_user (
     id            uuid         primary key,
     email         varchar(255) not null unique,
     display_name  varchar(120) not null,
-    -- Empreinte BCrypt, jamais le mot de passe. L'audit releve SHA-1 encore actif sur la
-    -- plateforme europeenne historique (F-11) : la preuve de concept applique la correction.
+    -- Empreinte Argon2id (DA-17), jamais le mot de passe. L'audit relève SHA-1 encore actif sur
+    -- la plateforme européenne historique (C-11) : la preuve de concept applique la correction.
+    -- 120 caractères suffisent : une empreinte Argon2id encodée en occupe 97.
     password_hash varchar(120) not null,
     role          varchar(20)  not null,
     created_at    timestamptz  not null,
@@ -43,12 +44,12 @@ create table assistance.conversation (
     opened_at   timestamptz  not null,
     taken_at    timestamptz,
     closed_at   timestamptz,
-    -- Verrou optimiste : deux agents ne peuvent pas prendre la meme demande en charge (US-26).
+    -- Verrou optimiste : deux agents ne peuvent pas prendre la même demande en charge (US-26).
     version     bigint       not null default 0,
     constraint conversation_status_known check (status in ('WAITING', 'TAKEN', 'CLOSED')),
-    -- L'etat et les dates ne peuvent pas se contredire : une demande en attente n'a pas d'agent,
-    -- une demande prise en charge en a un, une demande cloturee porte sa date de cloture. Un
-    -- client peut cloturer une demande jamais prise en charge : ce cas reste donc valide.
+    -- L'état et les dates ne peuvent pas se contredire : une demande en attente n'a pas d'agent,
+    -- une demande prise en charge en a un, une demande clôturée porte sa date de clôture. Un
+    -- client peut clôturer une demande jamais prise en charge : ce cas reste donc valide.
     constraint conversation_status_consistent check (
         (status = 'WAITING' and agent_id is null and taken_at is null and closed_at is null)
         or (status = 'TAKEN' and agent_id is not null and taken_at is not null and closed_at is null)
@@ -56,7 +57,7 @@ create table assistance.conversation (
     )
 );
 
--- File d'attente des agents : lecture par statut, par ordre d'arrivee (US-26).
+-- File d'attente des agents : lecture par statut, par ordre d'arrivée (US-26).
 create index conversation_queue_idx on assistance.conversation (status, opened_at);
 
 create table assistance.participant (
@@ -80,11 +81,11 @@ create table assistance.message (
     author_role     varchar(20)  not null,
     body            varchar(4000) not null,
     sent_at         timestamptz  not null,
-    -- Etat d'acheminement exige par US-24 : envoye, remis, lu.
+    -- État d'acheminement exige par US-24 : envoyé, remis, lu.
     state           varchar(20)  not null,
     constraint message_state_known check (state in ('SENT', 'DELIVERED', 'READ')),
     constraint message_author_role_known check (author_role in ('CUSTOMER', 'AGENT'))
 );
 
--- Lecture de l'historique dans l'ordre d'envoi (US-25), et reprise apres coupure (US-24).
+-- Lecture de l'historique dans l'ordre d'envoi (US-25), et reprise après coupure (US-24).
 create index message_conversation_idx on assistance.message (conversation_id, sent_at);

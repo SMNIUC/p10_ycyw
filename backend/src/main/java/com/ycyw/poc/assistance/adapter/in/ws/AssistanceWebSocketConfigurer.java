@@ -5,10 +5,10 @@ import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 /**
- * Le module Assistance branche son propre controle d'abonnement sur le canal entrant.
+ * Le module Assistance branche son propre contrôle d'abonnement sur le canal entrant.
  *
- * <p>La configuration du transport reste partagee ; la regle d'acces, elle, appartient au module qui
- * detient les conversations. Un module ajoute demain apporterait la sienne sans modifier la
+ * <p>La configuration du transport reste partagée ; la règle d'accès, elle, appartient au module qui
+ * détient les conversations. Un module ajoute demain apporterait la sienne sans modifier la
  * configuration commune.
  */
 @Configuration

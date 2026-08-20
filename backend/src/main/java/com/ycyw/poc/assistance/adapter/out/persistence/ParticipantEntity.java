@@ -17,7 +17,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** Presence d'un utilisateur dans une conversation, et son marqueur de lecture. */
+/** Présence d'un utilisateur dans une conversation, et son marqueur de lecture. */
 @Entity
 @Table(name = "participant", schema = "assistance")
 @Getter(AccessLevel.PACKAGE)
@@ -25,12 +25,12 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ParticipantEntity {
 
-    /** La cle est fixee a la construction et ne change jamais : pas d'accesseur en ecriture. */
+    /** La clé est fixée à la construction et ne change jamais : pas d'accesseur en écriture. */
     @EmbeddedId
     @Setter(AccessLevel.NONE)
     private ParticipantKey key;
 
-    /** Le lien vers la racine est etabli a la construction ; personne d'autre n'a a le manipuler. */
+    /** Le lien vers la racine est établi à la construction ; personne d'autre n'a à le manipuler. */
     @MapsId("conversationId")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "conversation_id", nullable = false)

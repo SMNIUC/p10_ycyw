@@ -4,14 +4,21 @@ import jakarta.persistence.Table;
 import java.util.UUID;
 
 /**
- * Classe volontairement fautive : « entite » du module Assistance qui ne declare pas son schema, et
- * atterrirait donc dans le schema par defaut de la connexion. Sert a verifier que la regle de
- * cloisonnement par schema detecte bien la faute.
+ * Classe volontairement fautive : « entité » du module Assistance qui ne declare pas son schéma, et
+ * atterrirait donc dans le schéma par défaut de la connexion. Sert à vérifier que la règle de
+ * cloisonnement par schéma détecte bien la faute.
  *
- * <p>Volontairement depourvue de l'annotation d'entite : le controle porte sur la declaration de
- * table, et cette classe ne doit pas etre reprise par le gestionnaire de persistance des tests.
+ * <p>Volontairement dépourvue de l'annotation d'entité : le contrôle porte sur la déclaration de
+ * table, et cette classe ne doit pas être reprise par le gestionnaire de persistance des tests.
+ *
+ * <p><b>L'analyse statique la signale comme inutilisée — c'est attendu.</b> ArchUnit charge ces
+ * classes par le <b>nom de leur paquet</b>, sous forme de chaîne :
+ * {@code importPackages("com.ycyw.poc.assistance.fixture")}. Aucune analyse statique ne peut suivre
+ * une référence qui n'existe que dans un littéral. Supprimer cette classe ferait échouer
+ * {@code ArchitectureRulesAreEffectiveTest}.
  */
 @Table(name = "table_sans_schema")
+@SuppressWarnings("unused")
 public class EntiteSansSchemaFautive {
 
     private UUID id;

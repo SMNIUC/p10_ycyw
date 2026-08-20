@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-/** Acces Spring Data aux messages. Interne a l'adaptateur. */
+/** Accès Spring Data aux messages. Interne à l'adaptateur. */
 interface MessageJpaRepository extends JpaRepository<MessageEntity, UUID> {
 
     List<MessageEntity> findByConversationIdOrderBySentAtAsc(UUID conversationId);

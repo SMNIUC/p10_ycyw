@@ -12,15 +12,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Cablage du module Assistance.
+ * Câblage du module Assistance.
  *
- * <p><b>Pourquoi une configuration explicite plutot que des annotations sur les services.</b> Le
+ * <p><b>Pourquoi une configuration explicite plutôt que des annotations sur les services.</b> Le
  * domaine et les services applicatifs ne portent aucune annotation de framework (DA-05) : c'est ce
- * qui les rend instanciables dans un test unitaire, sans contexte applicatif ni base de donnees.
- * Le prix de cette independance est ce fichier — une declaration par service, ecrite une fois.
+ * qui les rend instanciables dans un test unitaire, sans contexte applicatif ni base de données.
+ * Le prix de cette indépendance est ce fichier — une déclaration par service, écrite une fois.
  *
- * <p>C'est aussi le seul endroit ou l'on voit d'un coup d'oeil <b>ce dont le domaine a besoin</b> :
- * deux depots, un diffuseur, une horloge, un generateur d'identifiants. Cinq ports, et rien d'autre.
+ * <p>C'est aussi le seul endroit où l'on voit d'un coup d'oeil <b>ce dont le domaine à besoin</b> :
+ * deux dépôts, un diffuseur, une horloge, un générateur d'identifiants. Cinq ports, et rien d'autre.
  */
 @Configuration
 public class AssistanceModuleConfiguration {

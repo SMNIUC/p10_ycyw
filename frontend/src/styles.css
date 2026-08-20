@@ -2,10 +2,10 @@
  * Feuille de style unique et volontairement courte.
  *
  * Trois principes s'y appliquent :
- *  - accessibilite : contrastes superieurs au seuil AA, focus toujours visible, aucune information
- *    portee par la seule couleur (les etats sont ecrits en toutes lettres) ;
- *  - ecoconception : aucune police telechargee, aucune image, aucune bibliotheque de style ;
- *  - sobriete : l'interface ne doit pas devenir le sujet de la demonstration.
+ *  - accessibilité : contrastes supérieurs au seuil AA, focus toujours visible, aucune information
+ *    portée par la seule couleur (les états sont écrits en toutes lettres) ;
+ *  - écoconception : aucune police téléchargée, aucune image, aucune bibliothèque de style ;
+ *  - sobriété : l'interface ne doit pas devenir le sujet de la démonstration.
  */
 
 :root {
@@ -141,15 +141,21 @@ textarea {
   font-weight: 600;
 }
 
+/* Conteneur défilant : c'est lui qui porte la région de journal et le focus clavier. La liste
+   qu'il enveloppe reste une liste, pour conserver ses semantiques (voir le commentaire du
+   gabarit). */
 .conversation {
-  list-style: none;
-  margin: 0;
-  padding: 0;
   border: 1px solid var(--bordure);
   border-radius: 4px;
   min-height: 16rem;
   max-height: 26rem;
   overflow-y: auto;
+}
+
+.conversation ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .conversation li {
@@ -166,7 +172,7 @@ textarea {
   color: var(--texte-discret);
 }
 
-/* L'auteur est distingue par une bordure ET par un libelle textuel : la couleur seule ne porte
+/* L'auteur est distingue par une bordure ET par un libellé textuel : la couleur seule ne porte
    jamais l'information (ENF-03). */
 .message-agent {
   border-left: 4px solid var(--accent);

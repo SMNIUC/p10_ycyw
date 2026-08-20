@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Ouverture et fermeture de session.
  *
- * <p>Le jeton n'apparait jamais dans le corps de la reponse : il part exclusivement dans un cookie
+ * <p>Le jeton n'apparaît jamais dans le corps de la réponse : il part exclusivement dans un cookie
  * inaccessible au script (DA-18). L'application cliente ne le voit pas, ne le stocke pas, et n'a
  * donc aucun moyen de le divulguer.
  */
@@ -52,10 +52,10 @@ public class AuthController {
     }
 
     /**
-     * Etat de la session courante.
+     * État de la session courante.
      *
      * <p>Accessible sans authentification : c'est l'appel d'amorcage de l'application cliente, celui
-     * qui lui fait recevoir le jeton anti-rejeu avant toute ecriture.
+     * qui lui fait recevoir le jeton anti-rejeu avant toute écriture.
      */
     @GetMapping("/session")
     public SessionView session(@AuthenticationPrincipal Jwt jwt) {
@@ -94,11 +94,11 @@ public class AuthController {
     public record LoginRequest(@NotBlank String email, @NotBlank String password) {}
 
     /**
-     * Etat de session renvoye au client.
+     * État de session renvoyé au client.
      *
-     * <p>{@code instance} identifie l'instance qui a servi la requete. Ce champ n'a pas de valeur
-     * fonctionnelle : il rend visible, dans la demonstration, le fait que le client et l'agent sont
-     * bien connectes a deux instances differentes.
+     * <p>{@code instance} identifie l'instance qui a servi la requête. Ce champ n'a pas de valeur
+     * fonctionnelle : il rend visible, dans la démonstration, le fait que le client et l'agent sont
+     * bien connectés à deux instances différentes.
      */
     public record SessionView(
             boolean authenticated,

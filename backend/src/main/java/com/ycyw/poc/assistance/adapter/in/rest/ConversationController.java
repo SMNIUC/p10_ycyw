@@ -29,23 +29,23 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Adaptateur primaire REST du contexte Assistance.
  *
- * <p>Il porte ce que le canal temps reel ne peut pas porter : l'ouverture d'une conversation,
- * l'historique — donc la <b>reprise apres coupure</b> exigee par US-24 —, la file d'attente des
+ * <p>Il porte ce que le canal temps réel ne peut pas porter : l'ouverture d'une conversation,
+ * l'historique — donc la <b>reprise après coupure</b> exigée par US-24 —, la file d'attente des
  * agents et la prise en charge.
  *
- * <p>Les deux canaux appellent les <b>memes</b> services applicatifs. Aucune regle n'est dupliquee,
- * et c'est la condition pour qu'un troisieme point d'entree — l'API des applications d'agence —
- * puisse etre ajoute sans reecrire de metier (US-30).
+ * <p>Les deux canaux appellent les <b>mêmes</b> services applicatifs. Aucune règle n'est dupliquée,
+ * et c'est la condition pour qu'un troisième point d'entrée — l'API des applications d'agence —
+ * puisse être ajoute sans réécrire de métier (US-30).
  */
 @RestController
 @RequestMapping("/api")
-public class ConversationController {
+class ConversationController {
 
     private final ConversationLifecycleService lifecycle;
     private final ConversationQueryService queries;
     private final MessagingService messaging;
 
-    public ConversationController(
+    ConversationController(
             ConversationLifecycleService lifecycle,
             ConversationQueryService queries,
             MessagingService messaging) {
@@ -58,7 +58,7 @@ public class ConversationController {
     @PostMapping("/conversations")
     @ResponseStatus(HttpStatus.CREATED)
     @Transactional
-    public ConversationView open(
+    ConversationView open(
             @RequestBody OpenConversationRequest request, @AuthenticationPrincipal Jwt jwt) {
         Conversation conversation = lifecycle.open(participant(jwt), request.subject());
         return ConversationView.of(conversation);
@@ -67,7 +67,7 @@ public class ConversationController {
     /** US-25 : mes conversations, avec leur compteur de messages non lus. */
     @GetMapping("/conversations")
     @Transactional(readOnly = true)
-    public List<ConversationSummaryView> mine(@AuthenticationPrincipal Jwt jwt) {
+    List<ConversationSummaryView> mine(@AuthenticationPrincipal Jwt jwt) {
         return queries.conversationsOf(participant(jwt)).stream()
                 .map(ConversationSummaryView::of)
                 .toList();
@@ -76,51 +76,51 @@ public class ConversationController {
     /**
      * Historique complet.
      *
-     * <p>C'est l'appel qui rend vraie la reprise sans perte d'US-24 : a la reconnexion, le client
-     * recharge l'historique persiste plutot que de se fier a ce qu'il avait en memoire. La
-     * persistance fait autorite, le canal temps reel n'est qu'une livraison anticipee.
+     * <p>C'est l'appel qui rend vraie la reprise sans perte d'US-24 : à la reconnexion, le client
+     * recharge l'historique persisté plutôt que de se fier à ce qu'il avait en mémoire. La
+     * persistance fait autorité, le canal temps réel n'est qu'une livraison anticipée.
      */
     @GetMapping("/conversations/{id}/messages")
     @Transactional(readOnly = true)
-    public List<MessagePayload> history(
+    List<MessagePayload> history(
             @PathVariable String id, @AuthenticationPrincipal Jwt jwt) {
         return queries.history(ConversationId.of(id), participant(jwt)).stream()
                 .map(MessagePayload::of)
                 .toList();
     }
 
-    /** Accuse de lecture par le canal REST — utile quand la connexion temps reel est coupee. */
+    /** Accusé de lecture par le canal REST — utile quand la connexion temps réel est coupée. */
     @PostMapping("/conversations/{id}/read")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    public void markRead(@PathVariable String id, @AuthenticationPrincipal Jwt jwt) {
+    void markRead(@PathVariable String id, @AuthenticationPrincipal Jwt jwt) {
         messaging.markRead(ConversationId.of(id), participant(jwt));
     }
 
-    /** US-26 : cloture, diffusee au client. */
+    /** US-26 : clôture, diffusée au client. */
     @PostMapping("/conversations/{id}/close")
     @Transactional
-    public ConversationView close(@PathVariable String id, @AuthenticationPrincipal Jwt jwt) {
+    ConversationView close(@PathVariable String id, @AuthenticationPrincipal Jwt jwt) {
         return ConversationView.of(lifecycle.close(ConversationId.of(id), participant(jwt)));
     }
 
-    /** US-26 : file d'attente, par ordre d'arrivee, avec le temps d'attente. Reservee aux agents. */
+    /** US-26 : file d'attente, par ordre d'arrivée, avec le temps d'attente. Réservée aux agents. */
     @GetMapping("/agent/queue")
     @Transactional(readOnly = true)
-    public List<WaitingConversationView> queue() {
+    List<WaitingConversationView> queue() {
         return queries.waitingQueue().stream().map(WaitingConversationView::of).toList();
     }
 
     /**
      * US-26 : prise en charge.
      *
-     * <p>Deux agents peuvent cliquer au meme instant depuis deux instances. Le refus du second vient
-     * de l'agregat et du verrou optimiste de la base, pas d'une verification prealable qui laisserait
-     * une fenetre entre le controle et l'ecriture.
+     * <p>Deux agents peuvent cliquer au même instant depuis deux instances. Le refus du second vient
+     * de l'agrégat et du verrou optimiste de la base, pas d'une vérification préalable qui laisserait
+     * une fenêtre entre le contrôle et l'écriture.
      */
     @PostMapping("/agent/conversations/{id}/take")
     @Transactional
-    public ConversationView takeOver(@PathVariable String id, @AuthenticationPrincipal Jwt jwt) {
+    ConversationView takeOver(@PathVariable String id, @AuthenticationPrincipal Jwt jwt) {
         return ConversationView.of(lifecycle.takeOver(ConversationId.of(id), participant(jwt)));
     }
 

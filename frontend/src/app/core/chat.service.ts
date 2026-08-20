@@ -7,7 +7,7 @@ import { EvenementTchat } from './models';
 
 export type EtatConnexion = 'deconnecte' | 'connexion' | 'connecte' | 'reconnexion';
 
-/** Libelles textuels de l'etat de connexion — jamais une pastille de couleur seule (US-24). */
+/** Libellés textuels de l'état de connexion — jamais une pastille de couleur seule (US-24). */
 export const LIBELLE_ETAT_CONNEXION: Record<EtatConnexion, string> = {
   deconnecte: 'Déconnecté',
   connexion: 'Connexion en cours…',
@@ -21,16 +21,16 @@ interface Abonnement {
 }
 
 /**
- * Canal temps reel : une connexion WebSocket, protocole STOMP.
+ * Canal temps réel : une connexion WebSocket, protocole STOMP.
  *
- * <p>Trois comportements repondent directement aux criteres d'US-24 :
+ * <p>Trois comportements répondent directement aux critères d'US-24 :
  *
  * <ul>
- *   <li><b>reconnexion automatique</b> avec etat expose sous forme textuelle ;
- *   <li><b>reabonnement</b> aux memes destinations apres chaque reconnexion — sans quoi la
+ *   <li><b>reconnexion automatique</b> avec état exposé sous forme textuelle ;
+ *   <li><b>réabonnement</b> aux mêmes destinations après chaque reconnexion — sans quoi la
  *       connexion reviendrait muette ;
- *   <li><b>l'historique fait autorite</b> : ce service ne conserve aucun message. C'est le
- *       composant qui recharge l'historique persiste a chaque reconnexion, et la conversation
+ *   <li><b>l'historique fait autorité</b> : ce service ne conserve aucun message. C'est le
+ *       composant qui recharge l'historique persisté à chaque reconnexion, et la conversation
  *       reprend donc sans perte.
  * </ul>
  */
@@ -52,7 +52,7 @@ export class ChatService {
 
     const client = new Client({
       brokerURL: this.instances.websocket(),
-      // Le cookie de session accompagne la poignee de main : aucun jeton ne transite par le script.
+      // Le cookie de session accompagne la poignée de main : aucun jeton ne transite par le script.
       reconnectDelay: 3000,
       heartbeatIncoming: 10000,
       heartbeatOutgoing: 10000,
@@ -90,8 +90,8 @@ export class ChatService {
   }
 
   /**
-   * Le separateur de la destination est un point : le broker traite ce qui suit `/topic/` comme
-   * une cle de routage unique et refuserait un second niveau de chemin.
+   * Le séparateur de la destination est un point : le broker traite ce qui suit `/topic/` comme
+   * une clé de routage unique et refuserait un second niveau de chemin.
    */
   ecouterConversation(conversationId: string): Observable<EvenementTchat> {
     return this.ecouter(`/topic/conversations.${conversationId}`);

@@ -21,9 +21,9 @@ import lombok.RequiredArgsConstructor;
 /**
  * Lectures du contexte Assistance.
  *
- * <p>Sert aussi de point de controle d'acces aux conversations : la meme regle — « seul un
- * participant lit une conversation » — est appliquee a la reprise d'historique apres coupure et a
- * l'abonnement temps reel, pour qu'un abonnement STOMP ne devienne jamais une porte derobee.
+ * <p>Sert aussi de point de contrôle d'accès aux conversations : la même règle — « seul un
+ * participant lit une conversation » — est appliquée à la reprise d'historique après coupure et à
+ * l'abonnement temps réel, pour qu'un abonnement STOMP ne devienne jamais une porte dérobée.
  */
 @RequiredArgsConstructor
 public class ConversationQueryService {
@@ -35,8 +35,8 @@ public class ConversationQueryService {
     private final TimeProvider time;
 
     /**
-     * Historique complet d'une conversation (US-25), egalement utilise a la reconnexion : le client
-     * recharge l'historique faisant foi plutot que de faire confiance a ce qu'il avait en memoire
+     * Historique complet d'une conversation (US-25), également utilisé à la reconnexion : le client
+     * recharge l'historique faisant foi plutôt que de faire confiance à ce qu'il avait en mémoire
      * (US-24).
      */
     public List<Message> history(ConversationId id, ParticipantId requester) {
@@ -52,7 +52,7 @@ public class ConversationQueryService {
         List<ConversationSummary> summaries = new ArrayList<>();
         for (Conversation conversation : conversations.findForParticipant(user.userId())) {
             List<Message> all = messages.findByConversation(conversation.id());
-            Message last = all.isEmpty() ? null : all.get(all.size() - 1);
+            Message last = all.isEmpty() ? null : all.getLast();
             summaries.add(
                     new ConversationSummary(
                             conversation.id(),
@@ -66,7 +66,7 @@ public class ConversationQueryService {
         return summaries;
     }
 
-    /** File d'attente des agents, par ordre d'arrivee, avec le temps d'attente (US-26). */
+    /** File d'attente des agents, par ordre d'arrivée, avec le temps d'attente (US-26). */
     public List<WaitingConversation> waitingQueue() {
         Instant now = time.now();
         return conversations.findWaiting().stream()
@@ -80,7 +80,7 @@ public class ConversationQueryService {
                 .toList();
     }
 
-    /** Vrai si l'utilisateur participe a la conversation. Utilise avant tout abonnement temps reel. */
+    /** Vrai si l'utilisateur participe à la conversation. Utilisé avant tout abonnement temps réel. */
     public boolean isParticipant(ConversationId id, UUID userId) {
         return conversations.findById(id).map(c -> c.hasParticipant(userId)).orElse(false);
     }
